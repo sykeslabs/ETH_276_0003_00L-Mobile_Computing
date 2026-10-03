@@ -1,0 +1,30 @@
+# Local presentation tools, credentials, and generated files
+/.admin/presentation-workspace/
+output/
+token.json
+tools/
+.DS_Store
+jemula
+jemula802
+results_*
+models
+.venv/
+data
+Work
+__pycache__
+microllm_step*.json
+Html
+audio
+Pdf
+*_example_files
+
+# Local Google Slides API credentials
+tools/google-slides/credentials.json
+tools/google-slides/token.json
+tools/google-slides/.venv/
+
+
+# acoustic workshop (notebooks 02.10-02.13) scratch outputs
+acoustic_workshop_recordings/
+my_channel.json
+my_secret_message.wav
