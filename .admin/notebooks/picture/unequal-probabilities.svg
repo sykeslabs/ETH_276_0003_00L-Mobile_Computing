@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="710" viewBox="0 0 980 710" role="img">
+<title>Unequally likely three-bit source symbols</title>
+<style>text {font-family:Arial,sans-serif; fill:#172b4d} .label {font-size:19px} .edge {font-size:16px;fill:#49647b}</style>
+<text x="85" y="106" text-anchor="middle" class="label">000?</text>
+<path d="M 153 100 L 277 40" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="215.0" y="62.0" text-anchor="middle" class="edge">Yes</text>
+<path d="M 153 100 L 277 145" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="215.0" y="114.5" text-anchor="middle" class="edge">No</text>
+<text x="287" y="46" class="label" font-weight="bold">000   (p = 1/2)</text>
+<text x="335" y="151" text-anchor="middle" class="label">001?</text>
+<path d="M 403 145 L 527 100" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="465.0" y="114.5" text-anchor="middle" class="edge">Yes</text>
+<path d="M 403 145 L 527 190" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="465.0" y="159.5" text-anchor="middle" class="edge">No</text>
+<text x="537" y="106" class="label" font-weight="bold">001   (p = 1/4)</text>
+<text x="585" y="196" text-anchor="middle" class="label">010?</text>
+<path d="M 653 190 L 777 160" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="715.0" y="167.0" text-anchor="middle" class="edge">Yes</text>
+<path d="M 653 190 L 777 250" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="715.0" y="212.0" text-anchor="middle" class="edge">No</text>
+<text x="787" y="166" class="label" font-weight="bold">010   (p = 1/8)</text>
+<text x="85" y="536.0" text-anchor="middle" class="label">011...100?</text>
+<path d="M 153 530.0 L 277 440.0" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="215.0" y="477.0" text-anchor="middle" class="edge">Yes</text>
+<path d="M 153 530.0 L 277 590.0" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="215.0" y="552.0" text-anchor="middle" class="edge">No</text>
+<text x="335" y="446.0" text-anchor="middle" class="label">011?</text>
+<path d="M 403 440.0 L 527 410.0" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="465.0" y="417.0" text-anchor="middle" class="edge">Yes</text>
+<path d="M 403 440.0 L 527 470.0" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="465.0" y="447.0" text-anchor="middle" class="edge">No</text>
+<text x="335" y="596.0" text-anchor="middle" class="label">101?</text>
+<path d="M 403 590.0 L 527 530.0" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="465.0" y="552.0" text-anchor="middle" class="edge">Yes</text>
+<path d="M 403 590.0 L 527 620.0" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="465.0" y="597.0" text-anchor="middle" class="edge">No</text>
+<text x="537" y="416.0" class="label" font-weight="bold">011   (p = 1/40)</text>
+<text x="537" y="476.0" class="label" font-weight="bold">100   (p = 1/40)</text>
+<text x="537" y="536.0" class="label" font-weight="bold">101   (p = 1/40)</text>
+<text x="585" y="626.0" text-anchor="middle" class="label">110?</text>
+<path d="M 653 620.0 L 777 590.0" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="715.0" y="597.0" text-anchor="middle" class="edge">Yes</text>
+<path d="M 653 620.0 L 777 650.0" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="715.0" y="627.0" text-anchor="middle" class="edge">No</text>
+<text x="787" y="596.0" class="label" font-weight="bold">110   (p = 1/40)</text>
+<text x="787" y="656.0" class="label" font-weight="bold">111   (p = 1/40)</text>
+<circle cx="835" cy="250" r="18" stroke="#49647b" stroke-width="2" fill="none"/>
+<text x="835" y="256" text-anchor="middle" class="label">A</text>
+<circle cx="85" cy="480" r="18" stroke="#49647b" stroke-width="2" fill="none"/>
+<text x="85" y="486" text-anchor="middle" class="label">A</text>
+<path d="M 85 498 L 85 512" stroke="#69849a" stroke-width="2" fill="none"/>
+<text x="835" y="290" text-anchor="middle" class="edge">Continue at A below</text>
+</svg>

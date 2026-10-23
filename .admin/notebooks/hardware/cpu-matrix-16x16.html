@@ -1,0 +1,106 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>16 × 16 matrices: one output at a time</title><style>
+:root { color-scheme:light; --background:#fff; --foreground:#172b3a;
+ --muted:#e9eef2; --muted-foreground:#526572; --viz-series-1:#087f8c; }
+* { box-sizing:border-box; }
+body { margin:0; padding:12px; font:15px/1.5 system-ui,-apple-system,sans-serif;
+ background:var(--background); color:var(--foreground); }
+button { font:inherit; padding:7px 12px; border:1px solid #b3c1cb;
+ border-radius:6px; background:#fff; color:var(--foreground); }
+button { cursor:pointer; } button:hover { background:#e9f4f5; }
+.btn-primary { background:#087f8c; color:#fff; border-color:#087f8c; }
+.btn-primary:hover { background:#06646e; }
+button:focus-visible,a:focus-visible { outline:3px solid #2463a6; outline-offset:3px; }
+h1 { font-weight:400; font-size:15px; margin:0 0 8px; } h2 { font-weight:400; font-size:15px; }
+a { color:#2463a6; } .note { color:#526572; max-width:1000px; }
+</style></head><body><h1>16 × 16 matrices: one output at a time</h1><p class="note">Play advances through all 256 output cells at 70 ms per multiplication step. Completed values remain visible. This is a scalar teaching view; optimized CPU libraries typically compute vectorized tiles. A and B are the input matrices; C is their matrix product. The × symbol means multiplication. Each small square represents one matrix entry. A[row, column] and B[row, column] identify entries, with row and column numbers starting at 1. The running sum adds the products needed for one entry of C. Highlighted input squares show the values currently use, while green output squares show completed values.</p><div id="matrix16">
+<style>
+    #matrix16 { color:var(--foreground); }
+    #matrix16 .m16-controls { display:flex; flex-wrap:wrap; align-items:end; gap:12px; margin-bottom:12px; }
+    #matrix16 .m16-equation { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px; align-items:start; }
+    #matrix16 .m16-title { text-align:center; margin-bottom:8px; font-weight:400; }
+    #matrix16 .m16-grid { display:grid; grid-template-columns:repeat(16,minmax(0,1fr)); gap:1px; width:100%; max-width:200px; margin:auto; }
+    #matrix16 .m16-cell { aspect-ratio:1; min-width:0; border-radius:2px; background:var(--muted); }
+    #matrix16 .m16-cell.band { background:color-mix(in srgb,var(--viz-series-1) 22%,var(--muted)); }
+    #matrix16 .m16-cell.active { background:var(--viz-series-1); }
+    #matrix16 #m16-c { max-width:200px; }
+    #matrix16 #m16-c .m16-cell { display:grid; place-items:center; font-size:6.5px; line-height:1; font-variant-numeric:tabular-nums; }
+    #matrix16 .m16-cell.done { background:#c5e7df; color:#172b3a; }
+    #matrix16 .m16-cell.selected { background:var(--viz-series-1); outline:2px solid var(--foreground); outline-offset:1px; }
+    #matrix16 .m16-cell.selected.done { color:white; }
+    #matrix16 .m16-caption { text-align:center; color:var(--muted-foreground); margin-top:6px; font-size:13px; }
+    #matrix16 .m16-detail { text-align:center; margin-top:12px; min-height:2em; }
+    #matrix16 .m16-detail strong { font-weight:400; }
+    @media(max-width:650px) { #matrix16 .m16-equation { grid-template-columns:1fr; gap:20px; } #matrix16 .m16-grid { max-width:200px; } }
+  </style>
+<div class="m16-controls">
+<button class="btn btn-primary" id="m16-play" type="button">Play</button>
+<button class="btn" id="m16-reset" type="button">Reset</button>
+</div>
+<div aria-label="A times B equals C, each a sixteen by sixteen matrix" class="m16-equation" role="group">
+<section><div class="m16-title">A (16 rows, 16 columns)</div><div class="m16-grid" id="m16-a"></div><div class="m16-caption">One row of A</div></section>
+<section><div class="m16-title">B (16 rows, 16 columns)</div><div class="m16-grid" id="m16-b"></div><div class="m16-caption">One column of B</div></section>
+<section><div class="m16-title">C = A × B (16 rows, 16 columns)</div><div class="m16-grid" id="m16-c"></div><div class="m16-caption" id="m16-progress">0 / 256 outputs complete</div></section>
+</div>
+<div aria-live="polite" class="m16-detail" id="m16-detail"></div>
+<script>
+    (()=>{
+      const root=document.getElementById('matrix16');
+      const A=Array.from({length:16},(_,r)=>Array.from({length:16},(_,k)=>(r+k)%4+1));
+      const B=Array.from({length:16},(_,k)=>Array.from({length:16},(_,c)=>(2*k+c)%5+1));
+      const C=Array.from({length:16},(_,r)=>Array.from({length:16},(_,c)=>A[r].reduce((s,v,k)=>s+v*B[k][c],0)));
+      const grids={};
+      for(const name of ['a','b','c']) {
+        const parent=root.querySelector('#m16-'+name);
+        grids[name]=Array.from({length:256},(_,i)=>{
+          const el=document.createElement('span'); el.className='m16-cell'; el.setAttribute('aria-hidden','true'); parent.appendChild(el); return el;
+        });
+      }
+      let row=0,col=0;
+      let k=0, timer=null;
+      const completed=Array(256).fill(null);
+      const STEP_MS=70;
+      const play=root.querySelector('#m16-play');
+      function stop(){if(timer)clearInterval(timer); timer=null; play.textContent='Play';}
+      function finished(){return completed.every(value=>value!==null);}
+      function reset(){stop();completed.fill(null);row=0;col=0;k=0;render();}
+      function render(){
+        const r=+row,c=+col;
+        grids.a.forEach((el,i)=>el.className='m16-cell'+(Math.floor(i/16)===r?' band':'')+(k>0&&i===r*16+k-1?' active':''));
+        grids.b.forEach((el,i)=>el.className='m16-cell'+(i%16===c?' band':'')+(k>0&&i===(k-1)*16+c?' active':''));
+        const subtotal=A[r].slice(0,k).reduce((s,v,j)=>s+v*B[j][c],0);
+        if(k===16)completed[r*16+c]=subtotal;
+        grids.c.forEach((el,i)=>{
+          const done=completed[i]!==null;
+          el.className='m16-cell'+(done?' done':'')+(i===r*16+c?' selected':'');
+          el.textContent=done?completed[i]:'';
+          el.removeAttribute('aria-hidden');
+          el.title=`C[${Math.floor(i/16)+1}, ${i%16+1}]: ${done?completed[i]:'pending'}`;
+          el.setAttribute('aria-label',el.title);
+        });
+        const count=completed.filter(value=>value!==null).length;
+        root.querySelector('#m16-progress').textContent=`${count} / 256 outputs complete`;
+        const detail=root.querySelector('#m16-detail');
+        if(k===0) detail.textContent=`C[${r+1}, ${c+1}] needs 16 products. Start the calculation.`;
+        else detail.textContent=`Product ${k}/16: A[${r+1}, ${k}] × B[${k}, ${c+1}] = ${A[r][k-1]} × ${B[k-1][c]} = ${A[r][k-1]*B[k-1][c]}; Running sum = ${subtotal}`+(k===16?`; C[${r+1}, ${c+1}] = ${C[r][c]}`:'');
+        if(finished())detail.textContent+='; Matrix complete.';
+      }
+      function next(){
+        if(finished())reset();
+        if(k===16){
+          let index=(row*16+col+1)%256;
+          while(completed[index]!==null)index=(index+1)%256;
+          row=Math.floor(index/16);col=index%16;k=0;
+        }
+        k++;render();
+        if(finished())stop();
+      }
+      root.querySelector('#m16-reset').addEventListener('click',reset);
+      play.addEventListener('click',()=>{
+        if(timer){stop();return;}
+        next();
+        if(!finished()){timer=setInterval(next,STEP_MS);play.textContent='Pause';}
+      });
+      render();
+    })();
+  </script>
+</div></body></html>

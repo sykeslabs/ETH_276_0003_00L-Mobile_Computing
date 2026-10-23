@@ -1,0 +1,255 @@
+{
+  "timestamp_utc": "2026-10-01T14:53:11.817098+00:00",
+  "host": "raspberrypi",
+  "n": 512,
+  "repetitions": 100,
+  "trials": 5,
+  "timing": "Sequential completed matrix multiplications, prepared resident buffers; host wall time",
+  "results": [
+    {
+      "processor": "CPU",
+      "target": "pi",
+      "host": "raspberrypi",
+      "hardware": "Raspberry Pi 5 Model B Rev 1.1",
+      "runtime": "C++ / OpenMP / 16\u00d716 tiled / 1 threads",
+      "n": 512,
+      "dtype": "float32",
+      "seed": 42,
+      "repetitions": 100,
+      "warmup": 5,
+      "boundary": "resident compute",
+      "requested_threads": 1,
+      "actual_threads": 1,
+      "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+      "compiler_flags": [
+        "-O3",
+        "-march=native",
+        "-std=c++17",
+        "-fopenmp",
+        "-ffp-contract=fast"
+      ],
+      "input_sha256": "cdd1f8bc565e5b11a099bd24bb1142ca84bb7e8bc538583b44cda82be40e9b86",
+      "source_sha256": "f3dfe71d7f259138dc25df4039070f2d3ccf1fdcedab488a5a62caa3ea0d6fa1",
+      "trial_s": [
+        4.04878858,
+        4.018000856,
+        4.010378626,
+        4.018577613,
+        3.994694259
+      ],
+      "median_ms": 40.18000856,
+      "relative_error": 4.053085572486716e-07,
+      "validated": true,
+      "implementation": "CPU tiled C++ / 1 thread",
+      "health_before": {
+        "temperature_c": 65.0,
+        "throttling": "throttled=0x80000"
+      },
+      "health_after": {
+        "temperature_c": 72.15,
+        "throttling": "throttled=0x80000"
+      },
+      "cooldown_seconds": 8.0
+    },
+    {
+      "processor": "CPU",
+      "target": "pi",
+      "host": "raspberrypi",
+      "hardware": "Raspberry Pi 5 Model B Rev 1.1",
+      "runtime": "C++ / OpenMP / 16\u00d716 tiled / 4 threads",
+      "n": 512,
+      "dtype": "float32",
+      "seed": 42,
+      "repetitions": 100,
+      "warmup": 5,
+      "boundary": "resident compute",
+      "requested_threads": 4,
+      "actual_threads": 4,
+      "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+      "compiler_flags": [
+        "-O3",
+        "-march=native",
+        "-std=c++17",
+        "-fopenmp",
+        "-ffp-contract=fast"
+      ],
+      "input_sha256": "cdd1f8bc565e5b11a099bd24bb1142ca84bb7e8bc538583b44cda82be40e9b86",
+      "source_sha256": "f3dfe71d7f259138dc25df4039070f2d3ccf1fdcedab488a5a62caa3ea0d6fa1",
+      "trial_s": [
+        1.081985758,
+        1.051299793,
+        1.082427047,
+        1.067349249,
+        1.080849918
+      ],
+      "median_ms": 10.808499179999998,
+      "relative_error": 4.053085572486716e-07,
+      "validated": true,
+      "implementation": "CPU tiled C++ / 4 threads",
+      "health_before": {
+        "temperature_c": 65.0,
+        "throttling": "throttled=0x80000"
+      },
+      "health_after": {
+        "temperature_c": 82.6,
+        "throttling": "throttled=0x80000"
+      },
+      "cooldown_seconds": 26.01
+    },
+    {
+      "processor": "CPU",
+      "hardware": "Raspberry Pi 5 Model B Rev 1.1",
+      "host": "raspberrypi",
+      "timestamp_utc": "2026-10-01T14:50:52.736089+00:00",
+      "runtime": "NumPy 2.2.4",
+      "python": "3.13.5",
+      "os": "Linux-6.18.50+rpt-rpi-2712-aarch64-with-glibc2.41",
+      "dtype": "float32",
+      "n": 512,
+      "seed": 42,
+      "repetitions": 100,
+      "warmup": 5,
+      "requested_threads": 4,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "prefix": "libopenblas",
+          "filepath": "/usr/lib/aarch64-linux-gnu/openblas-pthread/libopenblasp-r0.3.29.so",
+          "version": "0.3.29",
+          "threading_layer": "pthreads",
+          "architecture": "armv8",
+          "num_threads": 4
+        }
+      ],
+      "numpy_config": "Build Dependencies:\n  blas:\n    detection method: pkgconfig\n    found: true\n    include directory: /usr/include/aarch64-linux-gnu\n    lib directory: /usr/lib/aarch64-linux-gnu\n    name: blas\n    openblas configuration: unknown\n    pc file directory: /usr/lib/aarch64-linux-gnu/pkgconfig\n    version: 3.12.1\n  lapack:\n    detection method: pkgconfig\n    found: true\n    include directory: /usr/include/aarch64-linux-gnu\n    lib directory: /usr/lib/aarch64-linux-gnu\n    name: lapack\n    openblas configuration: unknown\n    pc file directory: /usr/lib/aarch64-linux-gnu/pkgconfig\n    version: 3.12.1\nCompilers:\n  c:\n    args: -g, -O2, -Werror=implicit-function-declaration, -ffile-prefix-map=$BUILDDIR=.,\n      -fstack-protector-strong, -fstack-clash-protection, -Wformat, -Werror=format-security,\n      -mbranch-protection=standard, -Wdate-time, -D_FORTIFY_SOURCE=2\n    commands: cc\n    linker: ld.bfd\n    linker args: -Wl,-z,relro, -g, -O2, -Werror=implicit-function-declaration, -ffile-prefix-map=$BUILDDIR=.,\n      -fstack-protector-strong, -fstack-clash-protection, -Wformat, -Werror=format-security,\n      -mbranch-protection=standard, -Wdate-time, -D_FORTIFY_SOURCE=2\n    name: gcc\n    version: 14.2.0\n  c++:\n    args: -g, -O2, -ffile-prefix-map=$BUILDDIR=., -fstack-protector-strong, -fstack-clash-protection,\n      -Wformat, -Werror=format-security, -mbranch-protection=standard, -Wdate-time,\n      -D_FORTIFY_SOURCE=2\n    commands: c++\n    linker: ld.bfd\n    linker args: -Wl,-z,relro, -g, -O2, -ffile-prefix-map=$BUILDDIR=., -fstack-protector-strong,\n      -fstack-clash-protection, -Wformat, -Werror=format-security, -mbranch-protection=standard,\n      -Wdate-time, -D_FORTIFY_SOURCE=2\n    name: gcc\n    version: 14.2.0\n  cython:\n    commands: cython\n    linker: cython\n    name: cython\n    version: 3.0.11\nMachine Information:\n  build:\n    cpu: aarch64\n    endian: little\n    family: aarch64\n    system: linux\n  host:\n    cpu: aarch64\n    endian: little\n    family: aarch64\n    system: linux\nSIMD Extensions:\n  baseline:\n  - NEON\n  - NEON_FP16\n  - NEON_VFPV4\n  - ASIMD\n  found:\n  - ASIMDHP\n  not found:\n  - ASIMDFHM\n  - SVE\n\n",
+      "boundary": "resident compute",
+      "workload": "C=A@B; fixed A,B; output buffer reused",
+      "input_sha256": "cdd1f8bc565e5b11a099bd24bb1142ca84bb7e8bc538583b44cda82be40e9b86",
+      "trial_s": [
+        0.410619676,
+        0.43019345,
+        0.385223735,
+        0.385683645,
+        0.444199359
+      ],
+      "median_ms": 4.10619676,
+      "relative_error": 2.9006740959220735e-07,
+      "validated": true,
+      "system_power_W": null,
+      "temperature_mC_before": "65000",
+      "temperature_mC_after": "75450",
+      "target": "pi",
+      "implementation": "CPU NumPy/BLAS / 4 threads",
+      "health_before": {
+        "temperature_c": 65.0,
+        "throttling": "throttled=0x80000"
+      },
+      "health_after": {
+        "temperature_c": 75.45,
+        "throttling": "throttled=0x80000"
+      },
+      "cooldown_seconds": 36.02
+    },
+    {
+      "processor": "GPU",
+      "target": "pi",
+      "hardware": "Raspberry Pi 5 Model B Rev 1.1 / V3D 7.1.10.2",
+      "host": "raspberrypi",
+      "timestamp_utc": "2026-10-01T14:51:59.133307+00:00",
+      "runtime": "Vulkan / tiled FP32 compute shader / 16\u00d716 workgroup",
+      "shader_variant": "tiled",
+      "python": "3.13.5",
+      "os": "Linux-6.18.50+rpt-rpi-2712-aarch64-with-glibc2.41",
+      "dtype": "float32",
+      "n": 512,
+      "seed": 42,
+      "repetitions": 100,
+      "warmup": 5,
+      "boundary": "resident compute",
+      "timing_details": "Host wall time: sequential queue submission and fence wait; prepared shared buffers",
+      "workload": "C=A@B; fixed A,B; output buffer reused",
+      "input_sha256": "cdd1f8bc565e5b11a099bd24bb1142ca84bb7e8bc538583b44cda82be40e9b86",
+      "shader_sha256": "423df31c05eaabd9100a29adb3307c7de54f5f10fec07ec028dc5c36b499f077",
+      "trial_s": [
+        9.691558069,
+        9.695561969,
+        9.698098343,
+        9.68965617,
+        9.720906502
+      ],
+      "median_ms": 96.95561969,
+      "relative_error": 4.0735205383091427e-07,
+      "validated": true,
+      "system_power_W": null,
+      "temperature_mC_before": "66650",
+      "temperature_mC_after": "68850",
+      "device_metadata": {
+        "device": "V3D 7.1.10.2",
+        "vendor_id": 5348,
+        "driver_version": 109060098,
+        "api_version": 4206946
+      },
+      "implementation": "GPU tiled Vulkan",
+      "health_before": {
+        "temperature_c": 65.0,
+        "throttling": "throttled=0x80000"
+      },
+      "health_after": {
+        "temperature_c": 66.65,
+        "throttling": "throttled=0x80000"
+      },
+      "cooldown_seconds": 16.01
+    },
+    {
+      "processor": "GPU",
+      "target": "pi",
+      "hardware": "Raspberry Pi 5 Model B Rev 1.1 / V3D 7.1.10.2",
+      "host": "raspberrypi",
+      "timestamp_utc": "2026-10-01T14:53:11.811629+00:00",
+      "runtime": "Vulkan / untiled FP32 compute shader / 16\u00d716 workgroup",
+      "shader_variant": "untiled",
+      "python": "3.13.5",
+      "os": "Linux-6.18.50+rpt-rpi-2712-aarch64-with-glibc2.41",
+      "dtype": "float32",
+      "n": 512,
+      "seed": 42,
+      "repetitions": 100,
+      "warmup": 5,
+      "boundary": "resident compute",
+      "timing_details": "Host wall time: sequential queue submission and fence wait; prepared shared buffers",
+      "workload": "C=A@B; fixed A,B; output buffer reused",
+      "input_sha256": "cdd1f8bc565e5b11a099bd24bb1142ca84bb7e8bc538583b44cda82be40e9b86",
+      "shader_sha256": "93da3956b4730b4e09f5e60c00535a9e51e4dee2e2412a0d3e9c71e899c011bd",
+      "trial_s": [
+        12.064868545,
+        12.171070929,
+        12.343015561,
+        12.005127265,
+        12.070551733
+      ],
+      "median_ms": 120.70551733,
+      "relative_error": 4.0735205383091427e-07,
+      "validated": true,
+      "system_power_W": null,
+      "temperature_mC_before": "66650",
+      "temperature_mC_after": "66650",
+      "device_metadata": {
+        "device": "V3D 7.1.10.2",
+        "vendor_id": 5348,
+        "driver_version": 109060098,
+        "api_version": 4206946
+      },
+      "implementation": "GPU untiled Vulkan",
+      "health_before": {
+        "temperature_c": 64.45,
+        "throttling": "throttled=0x80000"
+      },
+      "health_after": {
+        "temperature_c": 67.2,
+        "throttling": "throttled=0x80000"
+      },
+      "cooldown_seconds": 10.01
+    }
+  ]
+}

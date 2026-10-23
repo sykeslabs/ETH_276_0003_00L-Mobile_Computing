@@ -1,0 +1,306 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+/*TV_CSS*/
+
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}
+video{width:100%;height:100%;object-fit:contain;background:#000}
+#startup{position:absolute;inset:0;background:#020403;overflow:hidden;pointer-events:none}
+#beam{position:absolute;inset:0;background:#dfffe9;box-shadow:0 0 24px #d7ffe4;animation:crt-warmup .48s ease-out forwards}
+#snow{position:absolute;width:100%;height:100%;inset:0;opacity:0;image-rendering:pixelated}
+#startup.noise #beam{display:none}
+#startup.noise #snow{opacity:1}
+#startup::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,#0003 0 1px,transparent 1px 4px);pointer-events:none}
+@keyframes crt-warmup{0%{transform:scale(.002,.002);opacity:0}15%{transform:scale(.01,.008);opacity:1}50%{transform:scale(1,.008);opacity:1}85%{transform:scale(1,1);opacity:.65}100%{transform:scale(1,1);opacity:0}}
+body.ready video{animation:crt-settle .4s ease-out}
+@keyframes crt-settle{from{filter:brightness(1.8);transform:scale(1.015)}to{filter:brightness(1);transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){#beam{animation:none;opacity:0}body.ready video{animation:none}}
+
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}
+body{display:flex;flex-direction:column;font-family:Arial,sans-serif}
+.eth-tv-antenna{height:90px;flex:0 0 90px}.eth-tv-feet{flex:0 0 38px}
+.eth-tv.eth-tv{display:flex;flex-direction:column;flex:1;min-height:0;padding:18px!important;overflow:hidden}
+.eth-tv-brand{flex-shrink:0;font-size:14px;gap:12px;flex-wrap:nowrap}
+.screen-row{display:flex;flex:1;min-height:0;gap:8px}
+.eth-tv-screen.eth-tv-screen{flex:1;min-width:0;min-height:0;aspect-ratio:auto}
+.eth-tv-speaker-panel{flex:0 0 88px;display:flex;flex-direction:column;align-items:center}
+.eth-tv-speaker{display:block!important;padding:0 10px!important;width:100%;box-sizing:border-box}
+.eth-tv-grille{height:100px}.eth-tv-knob{margin:5px auto 18px}
+.eth-tv-power{width:76px;height:36px;margin-top:14px;cursor:pointer;flex-shrink:0}
+.eth-tv-controls{flex-shrink:0;margin-top:14px}
+select{box-sizing:border-box;width:100%;min-width:0;padding:6px;background:#29392d;color:#eee9df;border:1px solid #6d7868;border-radius:4px}
+video{position:absolute;inset:0;visibility:hidden}
+body.powered video{visibility:visible}
+#glass{z-index:3}body.powered #glass{display:none}
+#startup{display:none;z-index:2}body.warming #startup{display:block}
+#beam{animation:none}body.warming #beam{animation:crt-warmup .48s ease-out forwards}
+@media(max-width:450px){.eth-tv-brand{font-size:10px}.eth-tv-brand img{width:85px}.eth-tv-speaker-panel{flex-basis:76px}.eth-tv-grille{height:70px}}
+.eth-tv-watermark{position:absolute;top:6%;right:5%;width:16%;max-width:105px;z-index:1;pointer-events:none;opacity:.55;display:none}
+.eth-tv-watermark img{display:block;width:100%;height:auto;filter:brightness(0) invert(1) drop-shadow(0 1px 2px #0008)}
+body.powered:not(.warming) .eth-tv-watermark{display:block}
+/* Full-height speaker grille with the power key anchored below it. */
+.eth-tv-speaker-panel{align-self:stretch;min-height:0}
+.eth-tv-speaker-panel .eth-tv-speaker{display:flex!important;flex:1;min-height:0;padding:0 4px!important}
+.eth-tv-speaker-panel .eth-tv-grille{flex:1;width:100%;height:auto!important;min-height:0;margin:0;border:2px solid #26352b;box-shadow:inset 0 2px 5px #0008;border-radius:10px}
+.eth-tv-speaker-panel .eth-tv-power{margin-top:14px;margin-bottom:0}
+.eth-tv-speaker-panel > .eth-tv-tuner{
+    display:block;position:relative;flex:0 0 58px;width:58px;height:58px;
+    min-height:58px;margin:2px auto 18px;padding:0;cursor:pointer;
+    border:6px solid #858876;border-radius:50%;
+    background:repeating-conic-gradient(from 0deg,#313c32 0deg 5deg,#465144 5deg 10deg);
+    box-shadow:inset 0 0 0 2px #19271d,2px 4px 6px #0008;
+    transform:rotate(var(--tuning-angle,0deg));transition:transform .35s cubic-bezier(.2,.8,.3,1);
+}
+.eth-tv-tuner::before{content:'';position:absolute;inset:5px;border-radius:50%;background:linear-gradient(125deg,#78816e,#344133 55%,#202e23);box-shadow:inset 1px 1px 3px #ffffff30}
+.eth-tv-tuner::after{content:'';position:absolute;top:4px;left:calc(50% - 2px);width:4px;height:17px;border-radius:2px;background:#e3dfbd;box-shadow:0 1px 2px #0008}
+.eth-tv-tuner:focus:not(:focus-visible){outline:none}
+.eth-tv-tuner:focus-visible{outline:2px solid #e8d8a1;outline-offset:3px}
+.eth-tv-controls{display:none}
+@media(prefers-reduced-motion:reduce){.eth-tv-speaker-panel > .eth-tv-tuner{transition:none}}
+#channel-name{position:absolute;top:10%;left:6%;right:6%;z-index:5;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .18s,transform .18s;color:#b9edaa;font:bold clamp(12px,2.7vw,21px)/1.4 'Courier New',monospace;text-shadow:0 0 4px #7cdb6c88,2px 2px 2px #000;overflow-wrap:anywhere}
+#channel-name.visible{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){#channel-name{transition:none}}
+body.channel-switch.warming #beam{animation-duration:.18s}
+body.channel-switch.ready video{animation-duration:.18s}
+.eth-tv-power{display:flex;align-items:center;justify-content:center}
+.eth-tv-power svg{display:block;flex-shrink:0;filter:drop-shadow(0 1px 1px #0006)}
+.eth-tv-power.is-on svg{filter:drop-shadow(0 0 4px #ffc85b)}
+body:not(.powered) #channel-name{display:none}
+/* A brief phosphor flash and rolling light band when tuning a powered set. */
+body.channel-switch #startup{background:#07140b18}
+body.channel-switch.warming #beam,
+body.channel-switch.warming #startup.noise #beam{
+    display:block;background:linear-gradient(0deg,transparent 20%,#e3ffea88 43%,#f5fff6bb 50%,transparent 65%);
+    box-shadow:none;animation:crt-channel-flash .42s linear forwards;
+}
+body.channel-switch #startup.noise #snow{opacity:.18}
+@keyframes crt-channel-flash{
+    0%{opacity:.15;transform:translateY(-65%) scaleY(.3)}
+    12%{opacity:.8;transform:translateY(-25%) scaleY(1.7)}
+    24%{opacity:.15;transform:translateY(0) scaleY(.2)}
+    38%{opacity:.65;transform:translateY(15%) scaleY(.8)}
+    55%{opacity:.08;transform:translateY(30%) scaleY(.15)}
+    72%{opacity:.4;transform:translateY(48%) scaleY(.5)}
+    100%{opacity:0;transform:translateY(85%) scaleY(.2)}
+}
+@media(prefers-reduced-motion:reduce){body.channel-switch.warming #beam,body.channel-switch.warming #startup.noise #beam{animation:none;opacity:0}}
+#shutdown{position:absolute;inset:0;z-index:6;pointer-events:none;display:none;background:#020403}
+#shutdown::after{content:'';position:absolute;inset:0;background:#e3f7e9;box-shadow:0 0 22px #c4ffda;opacity:0}
+body.shutting-down #shutdown{display:block}
+body.shutting-down #shutdown::after{animation:crt-power-down .55s ease-in forwards}
+body.shutting-down video{visibility:visible;animation:crt-picture-collapse .3s ease-in forwards}
+@keyframes crt-picture-collapse{0%{transform:scale(1);filter:brightness(1.2)}100%{transform:scale(1,.004);filter:brightness(3)}}
+body.shutting-down #shutdown{background:transparent;animation:crt-darken .55s forwards}
+@keyframes crt-darken{0%,45%{background:transparent}55%,100%{background:#020403}}
+@keyframes crt-power-down{
+    0%{transform:scale(1,1);opacity:0}
+    30%{transform:scale(1,.015);opacity:.3}
+    52%{transform:scale(.96,.006);opacity:1}
+    72%{transform:scale(.008,.012);opacity:1}
+    88%{transform:scale(.004,.006);opacity:.8}
+    100%{transform:scale(.001,.001);opacity:0}
+}
+body.shutting-down #glass{visibility:hidden}
+@media(prefers-reduced-motion:reduce){body.shutting-down video{animation:none;visibility:hidden}body.shutting-down #shutdown,body.shutting-down #shutdown::after{animation:none;background:#020403}}
+/* Compact channel lettering sits over the upper-left picture corner. */
+.eth-tv-watermark{
+    top:0;left:0;right:auto;width:auto;max-width:none;padding:10px 14px;
+    color:#fff;opacity:.65;font:italic 800 clamp(20px,4vw,34px)/1 Arial,Helvetica,sans-serif;
+    letter-spacing:-1.5px;text-shadow:0 1px 3px #0009;
+}
+.eth-tv-watermark{top:auto;bottom:0;left:0;right:auto;padding:4px 8px;}
+/* Size the picture around its 16:9 content, rather than a square TV viewport. */
+.eth-tv-brand{height:44px;min-height:44px;box-sizing:border-box;padding-bottom:18px;}
+.eth-tv-speaker-panel{width:88px!important;flex:0 0 88px!important;}
+.eth-tv-screen video{object-fit:contain;}
+.eth-tv-watermark{
+    top:0;bottom:auto;left:0;right:auto;padding:8px 12px;
+    font-family:'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif;
+    font-style:normal;font-weight:800;letter-spacing:.5px;
+}
+/* This recording has 96px side strips in its 1920px frame.
+   A 16:10 picture area with cover clips those strips without stretching. */
+.eth-tv-screen video{object-fit:cover;object-position:center;}
+/* Occasional low-level analogue interference, independent of playback. */
+#ambient-noise{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;opacity:0;image-rendering:pixelated}
+#ambient-noise.visible{opacity:.085}
+body:not(.powered) #ambient-noise,body.warming #ambient-noise{display:none}
+@media(prefers-reduced-motion:reduce){#ambient-noise{display:none!important}}
+#ambient-noise.visible{opacity:.14}
+body.interference:not(.warming):not(.shutting-down) video{animation:crt-tracking-drift 1.5s ease-in-out infinite;filter:contrast(1.04) saturate(.8)}
+@keyframes crt-tracking-drift{
+    0%,100%{transform:translate(0,0)}
+    22%{transform:translate(-2px,1px) skewX(.15deg)}
+    48%{transform:translate(1px,-1px)}
+    73%{transform:translate(-1px,0) skewX(-.12deg)}
+}
+@media(prefers-reduced-motion:reduce){body.interference video{animation:none!important;filter:none!important}}
+/* A faint room reflection remains on the CRT glass during playback. */
+.eth-tv-playing-glass{
+    position:absolute;inset:0;z-index:3;pointer-events:none;display:none;
+    border-radius:6px;overflow:hidden;
+    background:radial-gradient(ellipse at 40% 3%,#eaf4eb0d,transparent 58%);
+    box-shadow:inset 0 0 18px #0002,inset 0 1px 2px #e5f1e512;
+}
+.eth-tv-playing-glass::before{
+    content:'';position:absolute;inset:-35% 12% 10% -30%;transform:rotate(-24deg);
+    border-radius:40%;background:linear-gradient(110deg,transparent 28%,#d9eee30a 38%,#effff514 40%,#deeee205 44%,transparent 58%);
+}
+.eth-tv-playing-glass::after{
+    content:'';position:absolute;inset:7% 6% 45% 7%;border-radius:50%;
+    background:linear-gradient(170deg,#e3f0e309,transparent 65%);border-top:1px solid #d8f1dd0c;
+}
+body.powered .eth-tv-playing-glass{display:block}
+</style></head><body>
+<div class="eth-tv-antenna" aria-hidden="true"><span></span><span></span><i></i></div>
+<div class="eth-tv">
+<div class="eth-tv-brand"><span>LECTURE TELEVISION</span><span class="eth-maker-badge"><!--LOGO--></span></div>
+<div class="screen-row"><div class="eth-tv-screen">
+<video controls playsinline preload="auto" crossorigin="anonymous" aria-label="Local lecture recording"></video>
+<div class="eth-tv-watermark" aria-hidden="true">ETH</div><div id="channel-name" role="status" aria-live="polite"></div><div class="eth-tv-playing-glass" aria-hidden="true"></div><div id="glass" class="eth-tv-off-glass" aria-label="Television switched off"></div>
+<canvas id="ambient-noise" width="320" height="180" aria-hidden="true"></canvas><div id="shutdown" aria-hidden="true"></div><div id="startup" aria-hidden="true"><div id="beam"></div><canvas id="snow" width="320" height="180"></canvas></div>
+</div><div class="eth-tv-speaker-panel">
+<button id="tuner" class="eth-tv-knob eth-tv-tuner" aria-label="Tune to next channel" title="Turn to change channel"></button><div class="eth-tv-speaker"><div class="eth-tv-grille"></div></div>
+<button id="power" class="eth-tv-power widget-toggle-button" aria-label="Switch television on or off" aria-pressed="false" title="Switch television on or off"><svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true" focusable="false"><path d="M12 3v9M6.35 5.8a8 8 0 1 0 11.3 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+</div></div>
+<div class="eth-tv-controls"><select id="channel" aria-label="Channel"></select></div>
+</div><div class="eth-tv-feet" aria-hidden="true"><span></span><span></span></div>
+<script>
+const recordings=/*RECORDINGS*/;
+const video=document.querySelector('video'),power=document.getElementById('power'),channel=document.getElementById('channel');
+const startup=document.getElementById('startup'),canvas=document.getElementById('snow'),ctx=canvas.getContext('2d');
+const pixels=ctx.createImageData(canvas.width,canvas.height);
+let powered=false,timers=[],snowTimer,shutdownTimer;
+const positions=new Map();
+let loadedChannel=null,restorePosition=null;
+function rememberPosition(){
+    if(loadedChannel!==null && Number.isFinite(video.currentTime) && restorePosition===null){
+        positions.set(loadedChannel,video.currentTime);
+    }
+}
+video.addEventListener('timeupdate',rememberPosition);
+video.addEventListener('loadedmetadata',()=>{
+    if(restorePosition!==null){
+        const target=Number.isFinite(video.duration)?Math.min(restorePosition,video.duration):restorePosition;
+        video.currentTime=target;
+        restorePosition=null;
+    }
+});
+for(const [index,recording] of recordings.entries()){const option=new Option(recording.label,index);channel.add(option);}
+function load(){
+    rememberPosition();
+    const item=recordings[Number(channel.value)];video.pause();
+    loadedChannel=item.video;
+    restorePosition=positions.get(loadedChannel) || 0;
+    video.replaceChildren();video.style.objectFit=item.fit || 'contain';video.src=item.video;
+    if(item.captions){const track=document.createElement('track');track.kind='captions';track.src=item.captions;track.srclang='en';track.label='English';track.default=true;video.append(track);}
+    video.load();
+}
+function noise(){for(let i=0;i<pixels.data.length;i+=4){const v=Math.random()*255;pixels.data[i]=pixels.data[i+1]=pixels.data[i+2]=v;pixels.data[i+3]=255;}ctx.putImageData(pixels,0,0);}
+function clearStartup(){timers.forEach(clearTimeout);timers=[];clearInterval(snowTimer);startup.classList.remove('noise');document.body.classList.remove('warming','ready');}
+function turnOn(channelSwitch=false){
+    clearTimeout(shutdownTimer);document.body.classList.remove('shutting-down');
+    powered=true;power.classList.add('is-on');power.setAttribute('aria-pressed','true');clearStartup();
+    document.body.classList.toggle('channel-switch',channelSwitch);
+    void startup.offsetWidth;
+    document.body.classList.add('powered','warming');video.muted=false;
+    // Crucially, play runs synchronously in this same document's trusted button click.
+    video.play().catch(error=>console.warn('Playback could not start:',error));
+    timers.push(setTimeout(()=>{startup.classList.add('noise');noise();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snowTimer=setInterval(noise,65);},channelSwitch?180:480));
+    timers.push(setTimeout(()=>{clearInterval(snowTimer);document.body.classList.remove('warming');document.body.classList.add('ready');showChannelName(Number(channel.value));},channelSwitch?420:1580));
+}
+function turnOff(animate=true){
+    const wasPowered=powered;
+    clearTimeout(channelNameTimer);channelName.classList.remove('visible');
+    rememberPosition();powered=false;video.pause();clearStartup();clearTimeout(shutdownTimer);
+    document.body.classList.remove('powered','shutting-down');
+    power.classList.remove('is-on');power.setAttribute('aria-pressed','false');
+    if(animate && wasPowered){
+        // Restart the collapse even when the switch is clicked rapidly.
+        void document.getElementById('shutdown').offsetWidth;
+        document.body.classList.add('shutting-down');
+        shutdownTimer=setTimeout(()=>document.body.classList.remove('shutting-down'),560);
+    }
+}
+power.addEventListener('click',()=>powered?turnOff():turnOn());
+channel.addEventListener('change',()=>{const wasOn=powered;turnOff(false);load();if(wasOn)turnOn(true);});
+load();
+const tuner=document.getElementById('tuner');
+let tuningStep=0,channelNameTimer;
+const channelName=document.getElementById('channel-name');
+function showChannelName(index){
+    clearTimeout(channelNameTimer);
+    channelName.textContent='CH '+String(index+1).padStart(2,'0')+' · '+(recordings[index].filename || recordings[index].label);
+    channelName.classList.add('visible');
+    channelNameTimer=setTimeout(()=>channelName.classList.remove('visible'),2500);
+}
+function tuneChannel(direction=1){
+    tuningStep+=direction;
+    const tuningAngle=tuningStep*360/recordings.length;
+    tuner.style.setProperty('--tuning-angle',tuningAngle+'deg');
+    const next=(Number(channel.value)+direction+recordings.length)%recordings.length;
+    if(next!==Number(channel.value)){
+        channel.value=String(next);channel.dispatchEvent(new Event('change'));
+    }else if(powered){
+        // Retuning the same station still produces the analogue tuning flash.
+        clearStartup();
+        void startup.offsetWidth;
+        document.body.classList.add('channel-switch','warming');
+        timers.push(setTimeout(()=>{startup.classList.add('noise');noise();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)snowTimer=setInterval(noise,65);},180));
+        timers.push(setTimeout(()=>{clearInterval(snowTimer);document.body.classList.remove('warming');document.body.classList.add('ready');},420));
+    }
+    if(powered)showChannelName(next);
+    tuner.title='Channel '+(next+1)+' — '+recordings[next].label;
+    tuner.setAttribute('aria-label',tuner.title+'. Click for next channel; use arrow keys to tune.');
+}
+tuner.addEventListener('click',()=>tuneChannel(1));
+tuner.addEventListener('keydown',event=>{
+    if(['ArrowLeft','ArrowDown','ArrowRight','ArrowUp'].includes(event.key)){
+        event.preventDefault();tuneChannel(['ArrowLeft','ArrowDown'].includes(event.key)?-1:1);
+    }
+});
+tuner.title='Channel 1 — '+recordings[0].label;
+// First interference after 25–40 seconds, then every 90–210 seconds.
+const ambient=document.getElementById('ambient-noise');
+const ambientContext=ambient.getContext('2d');
+const ambientPixels=ambientContext.createImageData(ambient.width,ambient.height);
+let ambientTimer=null,ambientEndTimer=null,ambientFrames=null,ambientHasRun=false;
+function stopAmbientNoise(){
+    clearTimeout(ambientTimer);clearTimeout(ambientEndTimer);clearInterval(ambientFrames);
+    document.body.classList.remove('interference');
+    ambientTimer=null;ambient.classList.remove('visible');
+}
+function scheduleAmbientNoise(){
+    if(ambientTimer!==null || matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    ambientTimer=setTimeout(()=>{
+        ambientTimer=null;
+        if(powered && !video.paused && !video.ended && video.readyState>=3 && !document.hidden && !document.body.classList.contains('warming')){
+            function drawInterference(){
+                for(let i=0;i<ambientPixels.data.length;i+=4){
+                    const value=Math.random()*255;
+                    ambientPixels.data[i]=ambientPixels.data[i+1]=ambientPixels.data[i+2]=value;
+                    ambientPixels.data[i+3]=255;
+                }
+                ambientContext.putImageData(ambientPixels,0,0);
+                const band=(performance.now()/8)%ambient.height;
+                ambientContext.fillStyle='rgba(230,245,230,.55)';
+                ambientContext.fillRect(0,band,ambient.width,2);
+                ambientContext.fillStyle='rgba(0,0,0,.5)';
+                ambientContext.fillRect(0,(band+12)%ambient.height,ambient.width,5);
+            }
+            drawInterference();
+            ambientFrames=setInterval(drawInterference,85);
+            ambientHasRun=true;
+            ambient.classList.add('visible');
+            document.body.classList.add('interference');
+            ambientEndTimer=setTimeout(()=>{
+                clearInterval(ambientFrames);
+                ambient.classList.remove('visible');
+                document.body.classList.remove('interference');
+            },1000+Math.random()*1000);
+        }
+        if(powered && !video.paused && !video.ended)scheduleAmbientNoise();
+    },ambientHasRun ? 90000+Math.random()*120000 : 25000+Math.random()*15000);
+}
+video.addEventListener('playing',scheduleAmbientNoise);
+for(const event of ['pause','ended','emptied'])video.addEventListener(event,stopAmbientNoise);
+window.addEventListener('pagehide',stopAmbientNoise);
+</script></body></html>

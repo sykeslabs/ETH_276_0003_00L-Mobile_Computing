@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Animated Galton Board</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #52606d;
+      --line: #2f3b45;
+      --peg: #52606d;
+      --ball: #1f78b4;
+      --ball-dark: #155d8f;
+      --bin: #2f855a;
+      --panel: rgba(255, 255, 255, 0.0);
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+    }
+
+    .stage {
+      width: min(760px, 100vw);
+      margin: 0 auto;
+      background: transparent;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: transparent;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 4px 0 0;
+      background: transparent;
+    }
+
+    button {
+      border: 1.6px solid var(--line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--ink);
+      font: 600 13px/1.1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #f2f6f9;
+    }
+
+    .counter {
+      min-width: 86px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <canvas id="galton" width="760" height="650" aria-label="Animated Galton board"></canvas>
+    <div class="controls">
+      <button id="toggle" type="button">Pause</button>
+      <button id="reset" type="button">Reset</button>
+      <div class="counter" id="counter">0 balls</div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("galton");
+    const ctx = canvas.getContext("2d");
+    const toggleButton = document.getElementById("toggle");
+    const resetButton = document.getElementById("reset");
+    const counter = document.getElementById("counter");
+
+    const W = canvas.width;
+    const H = canvas.height;
+    const rows = 11;
+    const binCount = rows + 1;
+    const cx = W / 2;
+    const topY = 92;
+    const rowGap = 38;
+    const pegGap = 42;
+    const binTop = 535;
+    const binBottom = 625;
+    const binWidth = 46;
+    const ballRadius = 7;
+    const spawnInterval = 220;
+    const stepDuration = 180;
+    const colors = {
+      ink: "#1f2933",
+      muted: "#52606d",
+      line: "#2f3b45",
+      peg: "#52606d",
+      ball: "#1f78b4",
+      ballDark: "#155d8f",
+      bin: "#2f855a",
+      binSoft: "rgba(47, 133, 90, 0.20)",
+      guide: "rgba(47, 59, 69, 0.12)"
+    };
+
+    let running = true;
+    let lastSpawn = 0;
+    let lastTime = performance.now();
+    let activeBalls = [];
+    let counts = Array(binCount).fill(0);
+    let totalBalls = 0;
+
+    function pegPosition(row, index) {
+      return {
+        x: cx + (index - row / 2) * pegGap,
+        y: topY + row * rowGap
+      };
+    }
+
+    function binCenter(index) {
+      return cx + (index - rows / 2) * binWidth;
+    }
+
+    function makePath() {
+      const path = [{ x: cx, y: 42 }];
+      let rights = 0;
+      for (let row = 0; row < rows; row += 1) {
+        if (Math.random() < 0.5) rights += 1;
+        const p = pegPosition(row + 1, rights);
+        path.push({ x: p.x, y: p.y - 4 });
+      }
+      path.push({ x: binCenter(rights), y: binTop - 9 });
+      return { path, bin: rights };
+    }
+
+    function spawnBall(now) {
+      const next = makePath();
+      activeBalls.push({
+        path: next.path,
+        bin: next.bin,
+        age: 0,
+        started: now
+      });
+    }
+
+    function roundedRect(x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function drawText(text, x, y, size, weight = 600, color = colors.ink, align = "center") {
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.font = `${weight} ${size}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+      ctx.textAlign = align;
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    function drawBoard() {
+      ctx.save();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+
+      ctx.strokeStyle = colors.guide;
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i <= binCount; i += 1) {
+        const x = cx + (i - binCount / 2) * binWidth + binWidth / 2;
+        ctx.beginPath();
+        ctx.moveTo(x, binTop);
+        ctx.lineTo(x, binBottom);
+        ctx.stroke();
+      }
+
+      for (let row = 0; row < rows; row += 1) {
+        for (let index = 0; index <= row; index += 1) {
+          const p = pegPosition(row, index);
+          ctx.fillStyle = colors.peg;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 5.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < binCount; i += 1) {
+        const x = binCenter(i);
+        const h = Math.min(100, counts[i] * 4.2);
+        ctx.fillStyle = colors.binSoft;
+        roundedRect(x - binWidth * 0.38, binBottom - h, binWidth * 0.76, h, 4);
+        ctx.fill();
+        if (counts[i] > 0) {
+          drawText(String(counts[i]), x, binBottom + 12, 11, 700, colors.muted);
+        }
+      }
+
+      ctx.restore();
+    }
+
+    function drawStackedBalls() {
+      for (let bin = 0; bin < binCount; bin += 1) {
+        const maxVisible = Math.min(counts[bin], 10);
+        for (let i = 0; i < maxVisible; i += 1) {
+          const x = binCenter(bin) + ((i % 2) - 0.5) * 10;
+          const y = binBottom - 7 - i * 6;
+          ctx.fillStyle = colors.bin;
+          ctx.beginPath();
+          ctx.arc(x, y, 4.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    function drawBall(x, y) {
+      const grad = ctx.createRadialGradient(x - 2, y - 3, 1, x, y, ballRadius);
+      grad.addColorStop(0, "#8cc7ee");
+      grad.addColorStop(0.45, colors.ball);
+      grad.addColorStop(1, colors.ballDark);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function ballPosition(ball) {
+      const segment = Math.floor(ball.age / stepDuration);
+      if (segment >= ball.path.length - 1) {
+        return { done: true, x: ball.path.at(-1).x, y: ball.path.at(-1).y };
+      }
+
+      const local = (ball.age - segment * stepDuration) / stepDuration;
+      const eased = local < 0.5
+        ? 2 * local * local
+        : 1 - Math.pow(-2 * local + 2, 2) / 2;
+      const a = ball.path[segment];
+      const b = ball.path[segment + 1];
+      const arc = Math.sin(local * Math.PI) * 12;
+      return {
+        done: false,
+        x: a.x + (b.x - a.x) * eased,
+        y: a.y + (b.y - a.y) * eased - arc
+      };
+    }
+
+    function draw(now) {
+      const dt = Math.min(40, now - lastTime);
+      lastTime = now;
+
+      if (running && now - lastSpawn > spawnInterval) {
+        spawnBall(now);
+        lastSpawn = now;
+      }
+
+      ctx.clearRect(0, 0, W, H);
+      drawBoard();
+      drawStackedBalls();
+
+      const remaining = [];
+      for (const ball of activeBalls) {
+        if (running) ball.age += dt;
+        const p = ballPosition(ball);
+        if (p.done) {
+          counts[ball.bin] += 1;
+          totalBalls += 1;
+        } else {
+          drawBall(p.x, p.y);
+          remaining.push(ball);
+        }
+      }
+      activeBalls = remaining;
+
+      counter.textContent = `${totalBalls} ball${totalBalls === 1 ? "" : "s"}`;
+      requestAnimationFrame(draw);
+    }
+
+    toggleButton.addEventListener("click", () => {
+      running = !running;
+      toggleButton.textContent = running ? "Pause" : "Play";
+      lastSpawn = performance.now();
+    });
+
+    resetButton.addEventListener("click", () => {
+      activeBalls = [];
+      counts = Array(binCount).fill(0);
+      totalBalls = 0;
+      lastSpawn = performance.now();
+    });
+
+    requestAnimationFrame(draw);
+  </script>
+</body>
+</html>

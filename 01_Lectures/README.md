@@ -20,6 +20,8 @@
 
 The PDFs below contain one slide per page in the original slide dimensions, without handout space for notes.
 
+Open [Lecture Note-Taking](Lecture_Note_Taking.ipynb) in VS Code to browse lecture slides, take notes, and watch recordings streamed from the shared Google Drive folder with captions.
+
 #### Introduction
 
 - [01 - Introduction](<01 Mobile Computing - Introduction.pdf>)

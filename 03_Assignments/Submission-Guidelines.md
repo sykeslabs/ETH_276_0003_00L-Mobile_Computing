@@ -26,7 +26,17 @@ Where possible, your answers must refer to concrete values, observations, or out
 
 #### Use of Moodle
 
-Submit your results through the corresponding **assignment activity in Moodle** (German: "Aufgabe"). Use the filename "`leginumber_0X`" when submitting an assignment. For example, if your legi number is `23-123-456`, the notebook for Assignment 01 should be named "`23-123-456_01.ipynb`". Make sure that Moodle confirms your submission before the deadline. Updates after the submission deadline will not be considered unless agreed otherwise.
+🆕 Update: Multiple notebook files per assignment
+
+Submit your results through the corresponding **assignment activity in Moodle** (German: "Aufgabe"). Each homework assignment requires several completed notebooks. Upload all required `.ipynb` files to that assignment activity, using a distinct filename for each notebook.
+
+>Please consider prefixing each notebook filename with the legi number, using `leginumber_original-notebook-name.ipynb`, to help identify the submitted files. Renaming is optional; the original filenames may also be retained. For example, for legi number `23-123-456`, two notebooks for Assignment 01 could be named:
+>
+>- `23-123-456_01.1_Analog_Signals_and_Digital_Data.ipynb`
+>- `23-123-456_01.2_Representing_Signals_in_Time_and_Frequency_Domain.ipynb`
+
+
+Before the deadline, check that all required files are included and that Moodle confirms your submission. If you replace or add a file before the deadline, check the complete set of submitted files again. Updates after the submission deadline will not be considered unless agreed otherwise.
 
 #### No Hand-Written Texts
 

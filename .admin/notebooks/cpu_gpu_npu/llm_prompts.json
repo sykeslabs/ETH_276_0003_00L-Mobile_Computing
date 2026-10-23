@@ -1,0 +1,17 @@
+[
+  {
+    "id": "capital",
+    "task": "short answer",
+    "prompt": "What is the capital of France? Answer in one short sentence."
+  },
+  {
+    "id": "arithmetic",
+    "task": "short answer",
+    "prompt": "Calculate 17 + 25. Return only the number."
+  },
+  {
+    "id": "cpu",
+    "task": "explanation",
+    "prompt": "Explain what a CPU does in two short sentences."
+  }
+]

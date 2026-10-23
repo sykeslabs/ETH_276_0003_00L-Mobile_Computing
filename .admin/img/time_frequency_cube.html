@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Time and Frequency Domain Cube</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<div style="width: 100%; max-width: 490px; margin: 0 auto;">
+  <canvas id="time-frequency-cube" width="960" height="640" style="width: 100%; border: 0; cursor: grab;"></canvas>
+</div>
+<script>
+(() => {
+  const canvas = document.getElementById("time-frequency-cube");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const colors = {
+    dark: "#27343d",
+    muted: "#52606d",
+    grid: "#c9d1d6",
+    panel: "rgba(248,250,251,0.72)",
+    panelLight: "rgba(248,250,251,0.28)",
+    red: "#d64545",
+    blue: "#1f78b4",
+    green: "#2f855a",
+    purple: "#7f4fb3",
+    orange: "#c47a1c"
+  };
+
+  let yaw = -0.72;
+  let pitch = 0.34;
+  let dragging = false;
+  let lastX = 0;
+  let lastY = 0;
+  let userInteracted = false;
+  let lastFrameTime = null;
+  const autoRotateSpeed = 0.00045;
+
+  const freqs = [3, 8, 14];
+  const amps = [0.8, 0.45, 0.25];
+  const phases = [0.0, 0.5, 1.2];
+  const sineColors = [colors.green, colors.purple, colors.orange];
+
+  function signalValue(t) {
+    let y = 0;
+    for (let i = 0; i < freqs.length; i++) {
+      y += amps[i] * Math.sin(2 * Math.PI * freqs[i] * t + phases[i]);
+    }
+    return y;
+  }
+
+  function componentValue(t, i) {
+    return amps[i] * Math.sin(2 * Math.PI * freqs[i] * t + phases[i]);
+  }
+
+  function normalize(p) {
+    const x = (p.x - 0.5) * 3.1;
+    const y = (p.y / 16 - 0.5) * 3.1;
+    const z = (p.z / 1.6) * 1.55;
+    return {x, y, z};
+  }
+
+  function project(p) {
+    const q = normalize(p);
+    const cy = Math.cos(yaw);
+    const sy = Math.sin(yaw);
+    const cp = Math.cos(pitch);
+    const sp = Math.sin(pitch);
+
+    const x1 = q.x * cy - q.y * sy;
+    const y1 = q.x * sy + q.y * cy;
+    const z1 = q.z;
+
+    const y2 = y1 * cp - z1 * sp;
+    const z2 = y1 * sp + z1 * cp;
+    const scale = 165;
+
+    return {
+      x: W / 2 + x1 * scale,
+      y: H / 2 + 30 - z2 * scale,
+      depth: y2
+    };
+  }
+
+  function path3(points, stroke, width = 1.5, alpha = 1) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    points.forEach((p, i) => {
+      const s = project(p);
+      if (i === 0) ctx.moveTo(s.x, s.y);
+      else ctx.lineTo(s.x, s.y);
+    });
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function polygon3(points, fill, stroke = colors.dark, width = 1.2) {
+    ctx.save();
+    ctx.fillStyle = fill;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    points.forEach((p, i) => {
+      const s = project(p);
+      if (i === 0) ctx.moveTo(s.x, s.y);
+      else ctx.lineTo(s.x, s.y);
+    });
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function text3(text, p, color = colors.dark, size = 15, align = "center") {
+    const s = project(p);
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.font = `${size}px sans-serif`;
+    ctx.textAlign = align;
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, s.x, s.y);
+    ctx.restore();
+  }
+
+  function arrow3(from, to, color = colors.dark, width = 3.2, head = 12) {
+    const a = project(from);
+    const b = project(to);
+    const angle = Math.atan2(b.y - a.y, b.x - a.x);
+
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = width;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(b.x, b.y);
+    ctx.lineTo(
+      b.x - head * Math.cos(angle - Math.PI / 7),
+      b.y - head * Math.sin(angle - Math.PI / 7)
+    );
+    ctx.lineTo(
+      b.x - head * Math.cos(angle + Math.PI / 7),
+      b.y - head * Math.sin(angle + Math.PI / 7)
+    );
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function axisLabel3(text, point, from, to, color = colors.dark, size = 16, offset = 14) {
+    const p = project(point);
+    const a = project(from);
+    const b = project(to);
+    let angle = Math.atan2(b.y - a.y, b.x - a.x);
+
+    if (angle > Math.PI / 2 || angle < -Math.PI / 2) {
+      angle += Math.PI;
+    }
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(angle);
+    ctx.fillStyle = color;
+    ctx.font = `600 ${size}px sans-serif`;
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, 8, offset);
+    ctx.restore();
+  }
+
+  function drawWalls() {
+    polygon3([{x:0,y:0,z:-1.6},{x:1,y:0,z:-1.6},{x:1,y:0,z:1.6},{x:0,y:0,z:1.6}], colors.panel);
+    polygon3([{x:1,y:0,z:-1.6},{x:1,y:16,z:-1.6},{x:1,y:16,z:1.6},{x:1,y:0,z:1.6}], colors.panel);
+    polygon3([{x:0,y:0,z:0},{x:1,y:0,z:0},{x:1,y:16,z:0},{x:0,y:16,z:0}], colors.panelLight, colors.grid, 0.9);
+
+    for (let x = 0; x <= 1.0001; x += 0.2) {
+      path3([{x,y:0,z:-1.6},{x,y:0,z:1.6}], colors.grid, 0.9);
+    }
+    for (let z = -1.6; z <= 1.6001; z += 0.8) {
+      path3([{x:0,y:0,z},{x:1,y:0,z}], colors.grid, 0.9);
+    }
+    for (let f = 0; f <= 16.0001; f += 2) {
+      path3([{x:1,y:f,z:-1.6},{x:1,y:f,z:1.6}], colors.grid, 0.9);
+      path3([{x:0,y:f,z:0},{x:1,y:f,z:0}], colors.grid, 0.6, 0.65);
+    }
+    for (let z = -1.6; z <= 1.6001; z += 0.4) {
+      path3([{x:1,y:0,z},{x:1,y:16,z}], colors.grid, 0.9);
+    }
+  }
+
+  function drawCurves() {
+    const signal = [];
+    for (let i = 0; i <= 420; i++) {
+      const t = i / 420;
+      signal.push({x:t, y:0, z:signalValue(t)});
+    }
+    path3(signal, colors.red, 3.0, 0.9);
+
+    for (let c = 0; c < freqs.length; c++) {
+      const line = [];
+      for (let i = 0; i <= 420; i++) {
+        const t = i / 420;
+        line.push({x:t, y:freqs[c], z:componentValue(t, c)});
+      }
+      path3(line, sineColors[c], 2.4, 0.95);
+      path3([{x:0,y:freqs[c],z:0},{x:1,y:freqs[c],z:0}], colors.muted, 0.9, 0.45);
+    }
+
+    for (let i = 0; i < freqs.length; i++) {
+      path3([{x:1,y:freqs[i],z:0},{x:1,y:freqs[i],z:amps[i]}], colors.blue, 7);
+      const top = project({x:1,y:freqs[i],z:amps[i]});
+      ctx.save();
+      ctx.fillStyle = colors.blue;
+      ctx.beginPath();
+      ctx.arc(top.x, top.y, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      text3(`${freqs[i]} Hz`, {x:1,y:freqs[i],z:amps[i] + 0.22}, colors.blue, 14);
+    }
+  }
+
+  function drawAxes() {
+    arrow3({x:0,y:0,z:0}, {x:1.08,y:0,z:0}, colors.dark, 4.0, 14);
+    arrow3({x:1,y:0,z:0}, {x:1,y:16.9,z:0}, colors.dark, 4.0, 14);
+    arrow3({x:0,y:0,z:-1.6}, {x:0,y:0,z:1.85}, colors.dark, 4.0, 14);
+  }
+
+  function drawLabels() {
+    axisLabel3("time [s]", {x:1.08,y:0,z:0}, {x:0,y:0,z:0}, {x:1.08,y:0,z:0}, colors.dark, 16);
+    axisLabel3("frequency [Hz]", {x:1,y:16.9,z:0}, {x:1,y:0,z:0}, {x:1,y:16.9,z:0}, colors.dark, 16);
+    text3("amplitude", {x:-0.08,y:0,z:1.65}, colors.dark, 16, "right");
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(255,255,255,0)";
+    ctx.fillRect(0, 0, W, H);
+    drawWalls();
+    drawCurves();
+    drawAxes();
+    drawLabels();
+  }
+
+  canvas.addEventListener("mousedown", event => {
+    userInteracted = true;
+    dragging = true;
+    lastX = event.clientX;
+    lastY = event.clientY;
+    canvas.style.cursor = "grabbing";
+  });
+
+  window.addEventListener("mouseup", () => {
+    dragging = false;
+    canvas.style.cursor = "grab";
+  });
+
+  window.addEventListener("mousemove", event => {
+    if (!dragging) return;
+    const dx = event.clientX - lastX;
+    const dy = event.clientY - lastY;
+    lastX = event.clientX;
+    lastY = event.clientY;
+    yaw += dx * 0.01;
+    pitch += dy * 0.01;
+    pitch = Math.max(-1.25, Math.min(1.25, pitch));
+    draw();
+  });
+
+  canvas.addEventListener("touchstart", event => {
+    if (event.touches.length !== 1) return;
+    userInteracted = true;
+    dragging = true;
+    lastX = event.touches[0].clientX;
+    lastY = event.touches[0].clientY;
+  }, {passive: true});
+
+  canvas.addEventListener("touchmove", event => {
+    if (!dragging || event.touches.length !== 1) return;
+    const dx = event.touches[0].clientX - lastX;
+    const dy = event.touches[0].clientY - lastY;
+    lastX = event.touches[0].clientX;
+    lastY = event.touches[0].clientY;
+    yaw += dx * 0.01;
+    pitch += dy * 0.01;
+    pitch = Math.max(-1.25, Math.min(1.25, pitch));
+    draw();
+  }, {passive: true});
+
+  window.addEventListener("touchend", () => { dragging = false; });
+
+  function animate(timestamp) {
+    if (lastFrameTime === null) lastFrameTime = timestamp;
+    const dt = timestamp - lastFrameTime;
+    lastFrameTime = timestamp;
+
+    if (!userInteracted) {
+      yaw += dt * autoRotateSpeed;
+      draw();
+    }
+    requestAnimationFrame(animate);
+  }
+
+  draw();
+  requestAnimationFrame(animate);
+})();
+</script>
+
+</body>
+</html>

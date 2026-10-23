@@ -1,0 +1,17 @@
+/* Target only output trees containing these viewers, including VS Code's
+   renderer wrappers and Jupyter's widget background defaults. */
+html:has(.eth-tv-widget, .lecture-pdf-machine),
+body:has(.eth-tv-widget, .lecture-pdf-machine),
+div:has(.eth-tv-widget, .lecture-pdf-machine),
+.eth-tv-widget,
+.eth-tv-widget .widget-html-content,
+.eth-tv-widget iframe {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+.eth-tv-widget,
+.lecture-pdf-machine {
+    --jp-layout-color0: transparent;
+    --jp-layout-color1: transparent;
+    --widget-background-color: transparent;
+}

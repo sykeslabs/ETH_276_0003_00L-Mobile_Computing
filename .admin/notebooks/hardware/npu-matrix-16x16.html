@@ -1,0 +1,104 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NPU: streamed outputs in matrix C</title><style>
+:root { color-scheme:light; --background:#fff; --foreground:#172b3a;
+ --muted:#e9eef2; --muted-foreground:#526572; --viz-series-1:#087f8c; }
+* { box-sizing:border-box; }
+body { margin:0; padding:12px; font:15px/1.5 system-ui,-apple-system,sans-serif;
+ background:var(--background); color:var(--foreground); }
+button { font:inherit; padding:7px 12px; border:1px solid #b3c1cb;
+ border-radius:6px; background:#fff; color:var(--foreground); }
+button { cursor:pointer; } button:hover { background:#e9f4f5; }
+.btn-primary { background:#087f8c; color:#fff; border-color:#087f8c; }
+.btn-primary:hover { background:#06646e; }
+button:focus-visible,a:focus-visible { outline:3px solid #2463a6; outline-offset:3px; }
+h1 { font-weight:400; font-size:15px; margin:0 0 8px; } h2 { font-weight:400; font-size:15px; }
+a { color:#2463a6; } .note { color:#526572; max-width:1000px; }
+</style></head><body><h1>NPU: streamed outputs in matrix C</h1><p class="note">Values of A move right and values of B move down. The corresponding partial sums appear directly in matrix C as the wave advances. Playback continues across all tiles until matrix C is filled. This illustrates a systolic design, not the internal layout of any particular NPU. A and B are the input matrices; C is their matrix product. The × symbol means multiplication. Each small square represents one matrix entry. A tile is a 4 × 4 block of output entries. A tick is one animation step as input values move between units; it is not a measured hardware clock cycle. Highlighted input squares show the values currently used, while green output squares show completed values.</p><div id="npu-matrix16">
+<style>
+    #npu-matrix16 { color:var(--foreground); }
+    #npu-matrix16 .nm-controls { display:flex; flex-wrap:wrap; align-items:end; gap:12px; margin-bottom:12px; }
+    #npu-matrix16 .nm-panels { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+    #npu-matrix16 .nm-title { text-align:center; font-weight:400; margin-bottom:8px; }
+    #npu-matrix16 .nm-grid { display:grid; grid-template-columns:repeat(16,minmax(0,1fr)); gap:1px; max-width:200px; margin:auto; }
+    #npu-matrix16 .nm-cell { min-width:0; aspect-ratio:1; background:var(--muted); border-radius:2px; }
+    #npu-matrix16 .nm-cell.band { background:color-mix(in srgb,var(--viz-series-1) 22%,var(--muted)); }
+    #npu-matrix16 .nm-cell.active { background:var(--viz-series-1); }
+    #npu-matrix16 #nm-c { max-width:200px; }
+    #npu-matrix16 #nm-c .nm-cell { display:grid; place-items:center; font-size:6.5px; line-height:1; font-variant-numeric:tabular-nums; }
+    #npu-matrix16 #nm-c .active { color:white; }
+    #npu-matrix16 .nm-cell.done { background:#c5e7df; color:#172b3a; }
+    #npu-matrix16 .nm-caption { text-align:center; color:var(--muted-foreground); margin-top:6px; font-size:13px; }
+    #npu-matrix16 .nm-status { text-align:center; margin-top:12px; min-height:2em; }
+    @media(max-width:650px) { #npu-matrix16 .nm-panels { grid-template-columns:1fr; gap:22px; } #npu-matrix16 .nm-grid { max-width:200px; } }
+  </style>
+<div class="nm-controls">
+<button class="btn btn-primary" id="nm-play" type="button">Play</button>
+<button class="btn" id="nm-reset" type="button">Reset</button>
+</div>
+<div aria-label="Systolic style NPU computes a four by four tile of a sixteen by sixteen matrix product" class="nm-panels" role="group">
+<section><div class="nm-title">A (16 rows, 16 columns)</div><div class="nm-grid" id="nm-a"></div><div class="nm-caption">Four selected rows; values flow right</div></section>
+<section><div class="nm-title">B (16 rows, 16 columns)</div><div class="nm-grid" id="nm-b"></div><div class="nm-caption">Four selected columns; values flow down</div></section>
+<section><div class="nm-title">C = A × B (16 rows, 16 columns)</div><div class="nm-grid" id="nm-c"></div><div class="nm-caption">Partial sums advance through the selected tile</div></section>
+</div>
+<div aria-live="polite" class="nm-status" id="nm-status"></div>
+<script>
+    (()=>{
+      const root=document.getElementById('npu-matrix16');
+      const A=Array.from({length:16},(_,r)=>Array.from({length:16},(_,k)=>(r+k)%4+1));
+      const B=Array.from({length:16},(_,k)=>Array.from({length:16},(_,c)=>(2*k+c)%5+1));
+      const grids={};
+      for(const name of ['a','b','c']){
+        const parent=root.querySelector('#nm-'+name);
+        grids[name]=Array.from({length:256},()=>{const el=document.createElement('span');el.className='nm-cell';el.setAttribute('aria-hidden','true');parent.appendChild(el);return el;});
+      }
+      let row=0,col=0;
+      let tick=-1,timer=null;
+      const finished=new Set();
+      const tileIndex=()=>4*row+col;
+      const play=root.querySelector('#nm-play');
+      function stop(){if(timer)clearInterval(timer);timer=null;play.textContent='Play';}
+      function render(){
+        const r=4*row,c=4*col;
+        grids.a.forEach((el,index)=>{const rr=Math.floor(index/16),kk=index%16,i=rr-r;el.className='nm-cell'+(i>=0&&i<4?' band':'')+(tick>=0&&i>=0&&i<4&&kk===tick-i?' active':'');});
+        grids.b.forEach((el,index)=>{const kk=Math.floor(index/16),cc=index%16,j=cc-c;el.className='nm-cell'+(j>=0&&j<4?' band':'')+(tick>=0&&j>=0&&j<4&&kk===tick-j?' active':'');});
+        let active=0,completed=0;
+        grids.c.forEach((el,index)=>{
+          const rr=Math.floor(index/16),cc=index%16,i=rr-r,j=cc-c;
+          const selected=i>=0&&i<4&&j>=0&&j<4;
+          const k=tick-i-j;
+          const saved=finished.has(4*Math.floor(rr/4)+Math.floor(cc/4));
+          let sum=0;
+          for(let x=0;x<=(saved?15:selected?Math.min(15,k):-1);x++)sum+=A[rr][x]*B[x][cc];
+          const live=selected&&k>=0&&k<16,done=saved||(selected&&k>=15);
+          if(live)active++;if(done)completed++;
+          el.className='nm-cell'+(done?' done':live?' active':selected?' band':'');
+          el.textContent=saved||(selected&&k>=0)?sum:'';
+          el.removeAttribute('aria-hidden');
+          el.title=`C[${rr+1}, ${cc+1}]: ${saved||(selected&&k>=0)?sum:'pending'}`;
+          el.setAttribute('aria-label',el.title);
+        });
+        root.querySelector('#nm-status').textContent=finished.size===16?'Matrix complete; 256 output values':`Tile ${tileIndex()+1} of 16; illustrative tick ${tick+1} of 22; ${active} units multiplying; ${finished.size} tiles complete`;
+      }
+      function reset(){stop();finished.clear();tick=-1;render();}
+      function next(){
+        if(finished.size===16)return;
+        if(tick===21){
+          const tile=(tileIndex()+1)%16;
+          row=Math.floor(tile/4);col=tile%4;
+          tick=-1;
+        }
+        tick++;
+        if(tick===21)finished.add(tileIndex());
+        if(finished.size===16)stop();
+        render();
+      }
+      root.querySelector('#nm-reset').addEventListener('click',()=>{row=0;col=0;reset();});
+      play.addEventListener('click',()=>{
+        if(timer){stop();return;}
+        if(finished.size===16)reset();
+        next();
+        if(finished.size<16){timer=setInterval(next,55);play.textContent='Pause';}
+      });
+      render();
+    })();
+  </script>
+</div></body></html>

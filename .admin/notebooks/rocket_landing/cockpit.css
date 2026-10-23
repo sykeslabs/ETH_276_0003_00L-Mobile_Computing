@@ -1,0 +1,54 @@
+.rocket-cockpit{position:relative;padding:18px!important;margin:0 0 12px!important;
+ border:1px solid #425771;border-radius:14px;color:#deebf5;
+ background:radial-gradient(ellipse at 15% 0%,#263b50 0,transparent 55%),linear-gradient(140deg,#182739,#101a29);
+ box-shadow:inset 0 1px 0 #ffffff18,inset 0 -1px 0 #0008,0 5px 16px #0002;
+ font:13px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-sizing:border-box}
+.rocket-cockpit::before,.rocket-cockpit::after{content:"";position:absolute;top:9px;width:5px;height:5px;
+ border:1px solid #688198;border-radius:50%;background:#111c2a;box-shadow:0 1px 2px #0008}
+.rocket-cockpit::before{left:9px}.rocket-cockpit::after{right:9px}
+.rocket-cockpit .widget-html-content{font-family:inherit;line-height:1.35}
+.rocket-deck-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:0 2px 14px}
+.rocket-deck-heading strong{font-size:23px;letter-spacing:.01em;font-weight:650;color:#f0f7fb}
+.rocket-deck-tag{color:#83dce3;border:1px solid #396974;border-radius:4px;padding:5px 8px;
+ font:10px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.1em;white-space:nowrap}
+.rocket-cockpit .rocket-pid-panel{border:1px solid #344c63;border-top:2px solid #77b4ec;
+ border-radius:8px;background:linear-gradient(180deg,#152438,#101c2c);padding:12px 14px 14px;box-sizing:border-box}
+.rocket-cockpit .rocket-pid-panel.rocket-steering{border-top-color:#5ad2c8}
+.rocket-panel-heading{display:flex;align-items:center;gap:9px;color:#c6d9e9;font-size:11px;
+ letter-spacing:.09em;font-weight:700;margin-bottom:6px}
+.rocket-panel-number{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:#8ca9bf;
+ border:1px solid #3b5167;padding:2px 4px;border-radius:3px}
+.rocket-cockpit .widget-slider{max-width:100%;min-width:0;min-height:38px;margin:1px 0;font-family:inherit;align-items:center}
+.rocket-cockpit .widget-label,.rocket-cockpit .widget-label-basic{color:#c4d8e7;font-family:inherit;font-size:12px}
+.rocket-cockpit .widget-slider .widget-label{font-weight:600}
+.rocket-cockpit .slider-container{min-width:30px;margin-left:8px;margin-right:15px}
+.rocket-cockpit .widget-slider .slider-container .noUi-target{height:7px;background:#07101d;border:1px solid #3c5165;border-radius:4px;
+ box-shadow:inset 0 2px 4px #0008}
+.rocket-cockpit .widget-slider .slider-container .noUi-handle{width:18px!important;height:24px!important;right:-9px!important;top:-9px!important;
+ background:linear-gradient(90deg,#55758b,#cfdee7 40%,#b8cbd9 62%,#668399);border:1px solid #9bb5c7;
+ border-radius:4px;box-shadow:0 2px 4px #0009;cursor:ew-resize}
+.rocket-cockpit .widget-slider .slider-container .noUi-handle::before,.rocket-cockpit .widget-slider .slider-container .noUi-handle::after{content:"";position:absolute;
+ width:1px;height:10px;top:6px;background:#435e72;left:6px}
+.rocket-cockpit .widget-slider .slider-container .noUi-handle::after{left:10px}
+.rocket-cockpit .widget-slider .slider-container .noUi-handle:focus-visible{outline:2px solid #63d8d3;outline-offset:3px}
+.rocket-cockpit .widget-readout{box-sizing:border-box;color:#9de3df;background:#081420;border:1px solid #355063;
+ border-radius:4px;padding:5px 7px;min-width:54px;line-height:18px;height:29px;
+ font:12px ui-monospace,SFMono-Regular,Consolas,monospace;box-shadow:inset 0 1px 4px #0006}
+/* Keep gain tracks aligned even when Kp needs a two-digit readout. */
+.rocket-cockpit .rocket-pid-panel .widget-readout{flex:0 0 64px;width:64px;min-width:64px;max-width:64px}
+.rocket-cockpit .rocket-pid-row{gap:12px}
+.rocket-cockpit .rocket-environment > .widget-box{gap:12px}
+.rocket-cockpit .rocket-environment{margin-top:12px;border:1px solid #344b60;border-radius:8px;
+ background:#101d2b;padding:10px 14px;box-sizing:border-box}
+.rocket-section-caption{color:#8faabe;font-size:10px;letter-spacing:.13em;font-weight:700;margin-bottom:5px}
+.rocket-cockpit .widget-text input{background:#081420;color:#c6ece8;border:1px solid #3d586c;
+ border-radius:4px;padding:5px 8px;font:12px ui-monospace,SFMono-Regular,Consolas,monospace;height:29px}
+.rocket-cockpit .widget-radio-box label{color:#c4d8e7;font:12px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ line-height:23px}
+.rocket-cockpit input[type=radio],.rocket-cockpit input[type=checkbox]{accent-color:#5bd5cb}
+.rocket-cockpit .rocket-launch-row{gap:18px;margin-top:14px;padding-top:12px;border-top:1px solid #33495f}
+.rocket-cockpit .widget-button{background:linear-gradient(#287e79,#195754);border:1px solid #60bfb4;
+ border-radius:6px;color:#f0fffc;font:600 13px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ box-shadow:inset 0 1px 0 #ffffff24,0 2px 3px #0006;letter-spacing:.02em}
+.rocket-cockpit .widget-button:hover{background:linear-gradient(#32988f,#216a62)}
+.rocket-cockpit .widget-button:focus-visible{outline:2px solid #99f2e9;outline-offset:3px}

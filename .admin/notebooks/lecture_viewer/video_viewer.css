@@ -1,0 +1,184 @@
+.eth-tv {box-sizing:border-box; width:100%; padding:22px!important; border:8px solid #6d7868; border-radius:24px; background:linear-gradient(120deg,#465241,#202d23 55%,#364333); box-shadow:inset 0 0 0 3px #172018,0 8px 16px #0005; color:#e5dfc9;}
+.eth-tv-brand {display:flex;align-items:center;gap:24px;padding:0 4px 18px;font:bold 16px 'Courier New',monospace;letter-spacing:3px;color:#e5dfc9;}
+.eth-tv-brand img {width:110px;filter:brightness(0) invert(1);}
+.eth-tv-brand small {display:block;font-size:10px;letter-spacing:2px;margin-top:6px;}
+.eth-tv-screen {position:relative;aspect-ratio:16/9;background:#111;border:12px solid #171e19;border-radius:36px;overflow:hidden;box-shadow:0 0 0 4px #7a8070,inset 0 0 25px #000; padding:0!important;}
+.eth-tv-screen .widget-html-content {width:100%;height:100%;}
+.eth-tv-screen iframe,.eth-tv-snow {position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;}
+.eth-tv-snow {animation:eth-tv-flicker .13s steps(2,end) infinite;}
+.eth-tv-no-signal {position:absolute;left:0;right:0;top:48%;text-align:center;color:white;font:bold 16px monospace;text-shadow:2px 2px #222;}
+@keyframes eth-tv-flicker {0%{opacity:.6;transform:scale(1.03) translateY(-2px)}100%{opacity:1;transform:scale(1.03) translateY(2px)}}
+.eth-tv-speaker {padding:12px 0 0 22px;text-align:center;}
+.eth-tv-knob {width:56px;height:56px;border:6px solid #858876;border-radius:50%;background:linear-gradient(100deg,#28312a 46%,#bec0a8 48%,#bec0a8 52%,#28312a 54%);box-shadow:3px 5px 8px #0008;margin:10px auto 28px;}
+.eth-tv-grille {height:150px;background:repeating-linear-gradient(0deg,#111c15 0 3px,#57624f 3px 7px);border-radius:8px;margin-bottom:15px;}
+.eth-tv-speaker small {font:10px monospace;color:#d7d4bd;}
+.eth-tv-controls {margin-top:20px;gap:8px;}
+.eth-tv-controls button {background:linear-gradient(#69726a,#39483c)!important;color:#f4edd9!important;border:2px solid #19271c!important;border-bottom:5px solid #142018!important;border-radius:6px!important;font:bold 12px monospace!important;}
+.eth-tv-controls .widget-label,.eth-tv-controls .widget-html-content {color:#e5dfc9;}
+.eth-tv-controls a {color:#e9ce8c!important;}
+@media(prefers-reduced-motion:reduce){.eth-tv-snow{animation:none}}
+@media(max-width:650px){.eth-tv-speaker{display:none}.eth-tv-brand{font-size:11px;gap:12px}.eth-tv{padding:12px!important}}
+
+/* Let widget rows shrink to the notebook width and wrap long portal text. */
+.eth-tv, .eth-tv * {box-sizing:border-box;}
+.eth-tv {min-width:0;max-width:100%;}
+.eth-tv .widget-box, .eth-tv .widget-html, .eth-tv .widget-dropdown {min-width:0;max-width:100%;}
+.eth-tv > .widget-hbox, .eth-tv-controls {width:100%;}
+.eth-tv .widget-html-content {min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;}
+.eth-tv .widget-dropdown select {min-width:0;max-width:100%;width:0;flex:1 1 0;text-overflow:ellipsis;}
+.eth-tv-controls > .widget-hbox {flex-wrap:wrap;gap:8px;}
+.eth-tv-brand {flex-wrap:wrap;}
+.eth-tv-brand > span {min-width:0;overflow-wrap:anywhere;}
+.eth-tv-screen .widget-html-content {overflow:hidden;}
+
+/* ipywidgets adds outer margins: 100% plus those margins overflows VS Code outputs. */
+.eth-tv.eth-tv {width:100%;max-width:100%;min-width:0;margin:0!important;overflow-x:clip;}
+.eth-tv > .widget-box, .eth-tv > .widget-html,
+.eth-tv-controls > .widget-html, .eth-tv-controls > .widget-dropdown {
+    margin-left:0!important;margin-right:0!important;min-width:0;max-width:100%;
+}
+.eth-tv > .widget-hbox {overflow-x:clip;}
+
+/* Decorations occupy their own rows so they never widen the notebook output. */
+.eth-tv-assembly {box-sizing:border-box;overflow-x:clip;}
+.eth-tv-assembly > .widget-html {margin:0!important;min-width:0;max-width:100%;}
+.eth-tv-assembly .eth-tv-decoration {width:100%;overflow:hidden;flex-shrink:0;}
+.eth-tv-decoration .widget-html-content {padding:0!important;}
+.eth-tv {position:relative;}
+.eth-tv::before,.eth-tv::after {
+    content:'';position:absolute;bottom:5px;width:9px;height:9px;border-radius:50%;
+    background:linear-gradient(135deg,#c4caba,#667563 45%,#263428 49%,#b9c2ad 56%,#657260);
+    box-shadow:1px 1px 2px #0009;pointer-events:none;
+}
+.eth-tv::before {left:5px;}
+.eth-tv::after {right:5px;}
+.eth-tv-antenna {position:relative;height:100px;width:100%;}
+.eth-tv-antenna span {position:absolute;bottom:4px;left:calc(50% - 3px);width:6px;height:100px;border-radius:5px;background:linear-gradient(90deg,#555f57,#e2e5d8 45%,#6f7a71);transform-origin:50% 100%;box-shadow:1px 0 2px #0006;}
+.eth-tv-antenna span:first-child {transform:rotate(-48deg);}
+.eth-tv-antenna span:nth-child(2) {height:90px;transform:rotate(43deg);}
+.eth-tv-antenna i {position:absolute;bottom:0;left:calc(50% - 29px);width:58px;height:17px;border:2px solid #28372c;border-radius:35px 35px 0 0;background:linear-gradient(#8a927e,#3b493b);}
+.eth-tv-feet {height:38px;position:relative;width:100%;}
+.eth-tv-feet span {position:absolute;top:0;width:28px;height:30px;border:2px solid #202b22;border-top:0;border-radius:0 0 6px 6px;background:linear-gradient(90deg,#263329,#64725a 45%,#313e30);box-shadow:2px 4px 4px #0004;}
+.eth-tv-feet span:first-child {left:12%;transform:skewX(-14deg);}
+.eth-tv-feet span:last-child {right:12%;transform:skewX(14deg);}
+
+/* Upper screws stay anchored to the case, matching the lower pair. */
+.eth-tv-brand::before,.eth-tv-brand::after {
+    content:'';position:absolute;top:5px;width:9px;height:9px;border-radius:50%;
+    background:linear-gradient(135deg,#c4caba,#667563 45%,#263428 49%,#b9c2ad 56%,#657260);
+    box-shadow:1px 1px 2px #0009;pointer-events:none;
+}
+.eth-tv-brand::before {left:5px;}
+.eth-tv-brand::after {right:5px;}
+
+/* The case, rather than the inset logo widget, anchors the upper screws. */
+.eth-tv > .eth-tv-header,
+.eth-tv > .eth-tv-header > .widget-html-content,
+.eth-tv .eth-tv-brand {position:static!important;}
+
+.eth-tv-screen video {position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;}
+.eth-tv-assembly.eth-tv-assembly {margin:0 auto!important;align-self:center;}
+@media(max-width:650px){.eth-tv-assembly.eth-tv-assembly{width:100%!important;}}
+
+.eth-tv-speaker-panel > .widget-html {width:100%;margin:0!important;}
+.eth-tv-speaker-panel .eth-tv-speaker {padding-left:12px;padding-right:12px;}
+.eth-tv-speaker-panel > .widget-button {
+    background:linear-gradient(#69726a,#39483c)!important;color:#f4edd9!important;
+    border:2px solid #19271c!important;border-bottom:5px solid #142018!important;
+    border-radius:6px!important;font:bold 12px monospace!important;height:36px;
+}
+@media(max-width:650px){.eth-tv-speaker-panel{width:80px!important;flex-basis:80px!important;}}
+
+/* Curved dark glass and reflected room light while the set is switched off. */
+.eth-tv-off-glass {position:absolute;inset:0;border-radius:24px;background:radial-gradient(ellipse at 45% 35%,#26302c 0%,#111a16 48%,#040906 100%);box-shadow:inset 0 0 45px 14px #000b;overflow:hidden;}
+.eth-tv-off-glass::before {content:'';position:absolute;inset:-35% 12% 10% -30%;transform:rotate(-24deg);border-radius:40%;background:linear-gradient(110deg,transparent 28%,#d9eee318 38%,#effff52b 40%,#deeee20d 44%,transparent 58%);}
+.eth-tv-off-glass::after {content:'';position:absolute;inset:7% 6% 45% 7%;border-radius:50%;background:linear-gradient(170deg,#e3f0e30e,transparent 65%);border-top:1px solid #d8f1dd12;}
+.eth-tv-speaker-panel > .widget-toggle-button {
+    background:linear-gradient(#69726a,#39483c)!important;color:#f4edd9!important;
+    border:2px solid #19271c!important;border-bottom:5px solid #142018!important;
+    border-radius:6px!important;font:bold 12px monospace!important;height:36px;
+}
+.eth-tv-speaker-panel > .widget-toggle-button.mod-active {background:linear-gradient(#4d5948,#2b382b)!important;border-bottom-width:3px!important;}
+
+/* The permanently visible triangle doubles as the latched power indicator. */
+.eth-tv-speaker-panel > .eth-tv-power {
+    color:#e7dfc7!important;font:bold 21px/1 Arial,sans-serif!important;
+    background:linear-gradient(#69726a,#39483c)!important;
+    text-shadow:0 1px 1px #0008;box-shadow:inset 0 1px 2px #ffffff30,0 3px 3px #0007;
+    transition:background .15s,box-shadow .15s,transform .15s;
+}
+.eth-tv-speaker-panel > .eth-tv-power.is-on {
+    color:#fff1bb!important;background:linear-gradient(#a87932,#775020)!important;
+    border-bottom:3px solid #142018!important;transform:translateY(2px);
+    text-shadow:0 0 5px #ffc85b;box-shadow:inset 0 2px 5px #3a250e99,inset 0 0 8px #ffcf6266,0 0 10px #e7a64166;
+}
+.eth-tv-speaker-panel > .eth-tv-power:focus-visible {outline:2px solid #f2d99c;outline-offset:3px;}
+@media(prefers-reduced-motion:reduce){.eth-tv-speaker-panel > .eth-tv-power{transition:none;}}
+
+.eth-tv-brand > img,.eth-tv-brand > strong {margin-left:auto;flex-shrink:0;}
+
+/* Widget HTML wrappers must not add scrollbars around the TV decorations. */
+.eth-tv-assembly.eth-tv-assembly,
+.eth-tv-assembly .widget-box,
+.eth-tv-assembly .widget-html,
+.eth-tv-assembly .widget-html-content {overflow-y:clip!important;}
+.eth-tv-assembly > .eth-tv-decoration {height:auto;min-height:0;}
+.eth-tv-assembly > .eth-tv-decoration .widget-html-content {height:auto;}
+.eth-tv-screen.eth-tv-screen {overflow:hidden!important;}
+.eth-tv-screen iframe {display:block;}
+
+/* Mouse clicks use the physical pressed state without the default blue ring. */
+.eth-tv-speaker-panel > .eth-tv-power:focus:not(:focus-visible),
+.eth-tv-speaker-panel > .eth-tv-power:active:not(:focus-visible) {
+    outline:none!important;outline-offset:0!important;
+}
+.eth-tv-speaker-panel > .eth-tv-power:focus {
+    border-color:#19271c!important;border-bottom-color:#142018!important;
+}
+.eth-tv-speaker-panel > .eth-tv-power:focus:not(.is-on) {
+    box-shadow:inset 0 1px 2px #ffffff30,0 3px 3px #0007!important;
+}
+.eth-tv-speaker-panel > .eth-tv-power.is-on:focus {
+    box-shadow:inset 0 2px 5px #3a250e99,inset 0 0 8px #ffcf6266,0 0 10px #e7a64166!important;
+}
+
+/* Match the PDF viewer's case, corner radius and corner hardware. */
+.eth-tv.eth-tv {
+    border:7px solid #6d7868;border-radius:12px;
+    background:linear-gradient(115deg,#354134,#1c2b21 45%,#283728);
+    box-shadow:inset 0 0 0 2px #162218,0 4px 6px #0005;
+}
+.eth-tv::before,.eth-tv::after,.eth-tv-brand::before,.eth-tv-brand::after {
+    width:9px;height:9px;border-radius:50%;z-index:6;
+    background:linear-gradient(135deg,#c4caba,#667563 45%,#263428 49%,#b9c2ad 56%,#657260);
+    box-shadow:1px 1px 2px #0009;
+}
+.eth-tv::before,.eth-tv::after {bottom:5px;}
+.eth-tv-brand::before,.eth-tv-brand::after {top:5px;}
+.eth-tv::before,.eth-tv-brand::before {left:5px;}
+.eth-tv::after,.eth-tv-brand::after {right:5px;}
+.eth-tv-screen.eth-tv-screen {border-radius:8px;}
+.eth-tv-off-glass {border-radius:6px;}
+
+/* Raised ivory maker's mark on the olive casing. */
+.eth-tv-brand > img {
+    filter:brightness(0) saturate(100%) invert(91%) sepia(18%) saturate(355%) hue-rotate(3deg) brightness(94%) contrast(87%)
+        drop-shadow(0 -1px 0 #fff9dc99) drop-shadow(1px 2px 0 #111c12) drop-shadow(0 3px 2px #0008);
+    opacity:.95;
+}
+
+/* Lovefield's brushed-metal maker badge, from the LiFi Arduino console. */
+.eth-tv-brand > .eth-maker-badge {
+    margin-left:auto;flex-shrink:0;display:block;padding:5px 8px;
+    border:1px solid #9da89d;border-radius:3px;
+    background:repeating-linear-gradient(0deg,#ffffff09 0px,#ffffff09 1px,#00000008 1px,#00000008 2px),linear-gradient(115deg,#ede8d3,#c6c8b7 45%,#e1dfca 65%,#a7b0a3);
+    box-shadow:1px 2px 3px #0008,inset 0 0 0 1px #ffffff80;
+}
+.eth-tv-brand .eth-maker-badge img {display:block;width:96px;height:auto;filter:brightness(0);opacity:.8;}
+
+/* Cooler silver-green metal, matching the PDF screen surround. */
+.eth-tv-brand > .eth-maker-badge {
+    border-color:#87988f;
+    background:repeating-linear-gradient(0deg,#ffffff09 0px,#ffffff09 1px,#00000008 1px,#00000008 2px),linear-gradient(135deg,#87938d,#e2e8da 18%,#87988f 36%,#d8dfd3 60%,#6d8078 83%,#cbd3c6);
+    box-shadow:1px 2px 3px #0008,inset 0 0 0 1px #edf0df;
+}

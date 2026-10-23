@@ -1,0 +1,52 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#030504}
+video{width:100%;height:100%;object-fit:contain;background:#000}
+#startup{position:absolute;inset:0;background:#020403;overflow:hidden;pointer-events:none}
+#beam{position:absolute;inset:0;background:#dfffe9;box-shadow:0 0 24px #d7ffe4;animation:crt-warmup .48s ease-out forwards}
+#snow{position:absolute;width:100%;height:100%;inset:0;opacity:0;image-rendering:pixelated}
+#startup.noise #beam{display:none}
+#startup.noise #snow{opacity:1}
+#startup::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,#0003 0 1px,transparent 1px 4px);pointer-events:none}
+@keyframes crt-warmup{0%{transform:scale(.002,.002);opacity:0}15%{transform:scale(.01,.008);opacity:1}50%{transform:scale(1,.008);opacity:1}85%{transform:scale(1,1);opacity:.65}100%{transform:scale(1,1);opacity:0}}
+body.ready video{animation:crt-settle .4s ease-out}
+@keyframes crt-settle{from{filter:brightness(1.8);transform:scale(1.015)}to{filter:brightness(1);transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){#beam{animation:none;opacity:0}body.ready video{animation:none}}
+</style></head><body>
+<video controls autoplay playsinline preload="auto" aria-label="Local lecture recording"><source src="video.mp4" type="video/mp4"><!--CAPTIONS--></video>
+<div id="startup" aria-hidden="true"><div id="beam"></div><canvas id="snow" width="320" height="180"></canvas></div>
+<script>
+const video=document.querySelector('video');
+// Start while the power click's user activation may still be available.
+// The startup overlay covers the first frames until the CRT has warmed up.
+video.autoplay=true;
+video.muted=false;
+const startPlayback=()=>video.play().catch(()=>{});
+startPlayback();
+video.addEventListener('canplay',startPlayback,{once:true});
+const report=state=>fetch('state',{method:'POST',body:state}).catch(()=>{});
+video.addEventListener('playing',()=>report('playing'));
+for(const event of ['pause','ended','waiting','stalled','emptied','error']){
+    video.addEventListener(event,()=>report('paused'));
+}
+window.addEventListener('pagehide',()=>navigator.sendBeacon('state','paused'));
+const startup=document.getElementById('startup');
+const canvas=document.getElementById('snow');
+const ctx=canvas.getContext('2d');
+const pixels=ctx.createImageData(canvas.width,canvas.height);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function noise(){
+    for(let i=0;i<pixels.data.length;i+=4){
+        const value=Math.random()*255;
+        pixels.data[i]=pixels.data[i+1]=pixels.data[i+2]=value;
+        pixels.data[i+3]=255;
+    }
+    ctx.putImageData(pixels,0,0);
+}
+let snowTimer;
+setTimeout(()=>{startup.classList.add('noise');noise();if(!reduced)snowTimer=setInterval(noise,65);},480);
+setTimeout(()=>{
+    clearInterval(snowTimer);startup.remove();document.body.classList.add('ready');
+    video.play().catch(()=>{/* Native controls remain available if autoplay is restricted. */});
+},1580);
+</script></body></html>

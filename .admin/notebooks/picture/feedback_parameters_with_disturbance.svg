@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 45 1200 340" role="img" aria-labelledby="title desc">
+  <title id="title">Discrete-time feedback loop and its parameters</title>
+  <desc id="desc">The target minus the measurement enters controller gain k. Input u(t) enters the state update x(t+1) = a x(t) + b u(t) + d(t). The external disturbance d(t) enters the state update separately from the control input. A one-step delay supplies current state x(t), which returns to the state update and passes through sensor gain c to form the feedback measurement y(t).</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#334155"/></marker>
+    <style>text {font-family:Arial,sans-serif;fill:#172033} .wire {fill:none;stroke:#334155;stroke-width:2.5;marker-end:url(#arrow)} .label {font-size:20px} .small {font-size:17px;fill:#475569}</style>
+  </defs>
+  <rect width="1200" height="460" rx="16" fill="#f8fafc"/>
+  <path class="wire" d="M30 155 H145"/>
+  <text class="label" x="45" y="131">x*</text>
+  <circle cx="170" cy="155" r="25" fill="white" stroke="#334155" stroke-width="2"/>
+  <text x="132" y="143" font-size="23">+</text>
+  <text x="184" y="199" font-size="22">−</text>
+  <path class="wire" d="M195 155 H280"/>
+  <text class="label" x="200" y="76">e(t) = x* − y(t)</text>
+  <rect x="280" y="90" width="225" height="130" rx="12" fill="#fff1db" stroke="#d97706" stroke-width="3"/>
+  <text x="392" y="163" text-anchor="middle" font-size="40" font-weight="bold" fill="#b45309">k</text>
+  <text x="392" y="197" text-anchor="middle" font-size="20">u(t) = k e(t)</text>
+  <path class="wire" d="M505 155 H595"/>
+  <text class="label" x="527" y="131">u(t)</text>
+  <rect x="595" y="90" width="275" height="130" rx="12" fill="#e8f0fe" stroke="#2563eb" stroke-width="2"/>
+  <text x="732" y="144" text-anchor="middle" font-size="22">x(t+1) = a x(t)</text>
+  <text x="732" y="177" text-anchor="middle" font-size="22">+ b u(t) + d(t)</text>
+  <path class="wire" d="M550 244 H650 V220"/>
+  <text x="315" y="250" font-size="20" font-weight="bold">Disturbance d(t)</text>
+  <path class="wire" d="M870 155 H980"/>
+  <text class="label" x="879" y="131">x(t+1)</text>
+  <rect x="980" y="106" width="135" height="98" rx="12" fill="white" stroke="#334155" stroke-width="2"/>
+  <text x="1047" y="162" text-anchor="middle" font-size="28">z⁻¹</text>
+  <path class="wire" d="M1115 155 H1180"/>
+  <text class="label" x="1124" y="131">x(t)</text>
+  <circle cx="1145" cy="155" r="4" fill="#334155"/>
+  <path class="wire" d="M1145 155 V65 H732 V90"/>
+  <text class="small" x="925" y="59" text-anchor="middle">x(t)</text>
+  <path class="wire" d="M1145 155 V315 H805"/>
+  <rect x="595" y="265" width="210" height="100" rx="12" fill="#e7f5ed" stroke="#15803d" stroke-width="2"/>
+  <text x="700" y="294" text-anchor="middle" font-size="19" font-weight="bold">c</text>
+  <text x="700" y="331" text-anchor="middle" font-size="22">y(t) = c x(t)</text>
+  <path class="wire" d="M595 315 H170 V180"/>
+  <text class="label" x="315" y="301">y(t)</text>
+</svg>

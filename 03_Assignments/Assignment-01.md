@@ -27,13 +27,15 @@ This is a homework assignment. Please adhere strictly to the [Submission Guideli
 **Submit:** [Assignment 01 on Moodle](https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1446573)
 
 
+Submission is not required for notebooks marked OPTIONAL.
+
 #### 00 - Introduction
 
 - ~~[00.1 Check Course Environment](../02_Notebooks/00_Intro/00.1_Check_Course_Environment.ipynb)~~
 - ~~[00.2 Check Hardware Connectivity](../02_Notebooks/00_Intro/00.2_Check_Hardware_Connectivity.ipynb)~~
 - [00.3 Scientific Literature and Research Integrity](../02_Notebooks/00_Intro/00.3_Scientific_Literature_and_Research_Integrity.ipynb)
-- [00.4 Vibe Coding Best Practices](../02_Notebooks/00_Intro/00.4_Vibe_Coding_Best_Practices.ipynb) — **Optional; submission not required.**
-- [00.5 Learning Git Basics](../02_Notebooks/00_Intro/00.5_Learning_Git_Basics.ipynb) — **Optional; submission not required.**
+- OPTIONAL [00.4 Vibe Coding Best Practices](../02_Notebooks/00_Intro/00.4_Vibe_Coding_Best_Practices.ipynb)
+- OPTIONAL [00.5 Learning Git Basics](../02_Notebooks/00_Intro/00.5_Learning_Git_Basics.ipynb)
 
 #### 01 - Data and Signals
 

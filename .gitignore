@@ -28,3 +28,5 @@ tools/google-slides/.venv/
 acoustic_workshop_recordings/
 my_channel.json
 my_secret_message.wav
+# Personal lecture notes
+*notes.json

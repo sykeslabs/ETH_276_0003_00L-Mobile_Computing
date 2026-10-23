@@ -57,19 +57,20 @@
 
 1. [03.1_5G_Mobile_Communication.ipynb](<03_Mobile_Systems/03.1_5G_Mobile_Communication.ipynb>)
 1. [03.2_Cellular_Networking.ipynb](<03_Mobile_Systems/03.2_Cellular_Networking.ipynb>)
-1. [03.3_GNSS.ipynb](<03_Mobile_Systems/03.3_GNSS.ipynb>)
-1. [03.4_LiFi.ipynb](<03_Mobile_Systems/03.4_LiFi.ipynb>)
+1. [03.3_Global_Navigation_Satellite_Systems.ipynb](<03_Mobile_Systems/03.3_Global_Navigation_Satellite_Systems.ipynb>)
+1. [03.4_Visible_Light_Communication.ipynb](<03_Mobile_Systems/03.4_Visible_Light_Communication.ipynb>)
 1. [03.5_Wi-Fi_Contention_Protocol.ipynb](<03_Mobile_Systems/03.5_Wi-Fi_Contention_Protocol.ipynb>)
 1. [03.6_Wi-Fi_Network_Performance.ipynb](<03_Mobile_Systems/03.6_Wi-Fi_Network_Performance.ipynb>)
 1. [03.7_Wi-Fi_Simulation_with_Jemula802.ipynb](<03_Mobile_Systems/03.7_Wi-Fi_Simulation_with_Jemula802.ipynb>)
 1. [03.8_Wi-Fi_Single_Link_Throughput.ipynb](<03_Mobile_Systems/03.8_Wi-Fi_Single_Link_Throughput.ipynb>)
+1. [03.9_5G_RedCap_for_Future_IoT.ipynb](<03_Mobile_Systems/03.9_5G_RedCap_for_Future_IoT.ipynb>)
 
 #### 04_Mobile_Algorithms
 
 1. [04.1_Control_and_Coordination_in_Mobile_Systems.ipynb](<04_Mobile_Algorithms/04.1_Control_and_Coordination_in_Mobile_Systems.ipynb>)
 1. [04.2_PID_Controller.ipynb](<04_Mobile_Algorithms/04.2_PID_Controller.ipynb>)
-1. [04.3_Tit-for-Tat_Spectrum_Management.ipynb](<04_Mobile_Algorithms/04.3_Tit-for-Tat_Spectrum_Management.ipynb>)
-1. [04.4_Rocket_Landing_With_PID.ipynb](<04_Mobile_Algorithms/04.4_Rocket_Landing_With_PID.ipynb>)
+1. [04.3_PID_For_Rocket_Landing.ipynb](<04_Mobile_Algorithms/04.3_PID_For_Rocket_Landing.ipynb>)
+1. [04.4_Tit-for-Tat_Spectrum_Management.ipynb](<04_Mobile_Algorithms/04.4_Tit-for-Tat_Spectrum_Management.ipynb>)
 
 #### 05_Mobile_AI
 
@@ -80,22 +81,28 @@
 1. [05.05_Introduction_to_LLMs.ipynb](<05_Mobile_AI/05.05_Introduction_to_LLMs.ipynb>)
 1. [05.06_Understanding_Training.ipynb](<05_Mobile_AI/05.06_Understanding_Training.ipynb>)
 1. [05.07_Introduction_to_Local_LLMs.ipynb](<05_Mobile_AI/05.07_Introduction_to_Local_LLMs.ipynb>)
-1. [05.08_Making_Models_Smaller.ipynb](<05_Mobile_AI/05.08_Making_Models_Smaller.ipynb>)
-1. [05.09_Tit-for-Tat_meets_AI.ipynb](<05_Mobile_AI/05.09_Tit-for-Tat_meets_AI.ipynb>)
-1. [05.10_Experimenting_with_Prompts.ipynb](<05_Mobile_AI/05.10_Experimenting_with_Prompts.ipynb>)
-1. [05.11_Understanding_Inference_Control.ipynb](<05_Mobile_AI/05.11_Understanding_Inference_Control.ipynb>)
-1. [05.12_Understanding_Reasoning_Models.ipynb](<05_Mobile_AI/05.12_Understanding_Reasoning_Models.ipynb>)
-1. [05.13_Local_Agents_I.ipynb](<05_Mobile_AI/05.13_Local_Agents_I.ipynb>)
-1. [05.14_Local_Agents_II.ipynb](<05_Mobile_AI/05.14_Local_Agents_II.ipynb>)
-1. [05.15_Local_Model_Context_Protocol.ipynb](<05_Mobile_AI/05.15_Local_Model_Context_Protocol.ipynb>)
-1. [05.16_Build_Your_Own_Model.ipynb](<05_Mobile_AI/05.16_Build_Your_Own_Model.ipynb>)
-1. [05.17_GRAND_FINALE_The_2026_Tuning_Competition.ipynb](<05_Mobile_AI/05.17_GRAND_FINALE_The_2026_Tuning_Competition.ipynb>)
+1. [05.08_Hardware_for_Local_LLMs.ipynb](<05_Mobile_AI/05.08_Hardware_for_Local_LLMs.ipynb>)
+1. [05.09_Making_Models_Smaller.ipynb](<05_Mobile_AI/05.09_Making_Models_Smaller.ipynb>)
+1. [05.10_Local_RAG_meets_Tit-for-Tat.ipynb](<05_Mobile_AI/05.10_Local_RAG_meets_Tit-for-Tat.ipynb>)
+1. [05.11_Local_LLM_meets_PID.ipynb](<05_Mobile_AI/05.11_Local_LLM_meets_PID.ipynb>)
+1. [05.12_Understanding_Inference_Control.ipynb](<05_Mobile_AI/05.12_Understanding_Inference_Control.ipynb>)
+1. [05.13_Experimenting_with_Prompts.ipynb](<05_Mobile_AI/05.13_Experimenting_with_Prompts.ipynb>)
+1. [05.14_New_Kinds_of_Language_Models.ipynb](<05_Mobile_AI/05.14_New_Kinds_of_Language_Models.ipynb>)
+1. [05.15_Local_Agents_I.ipynb](<05_Mobile_AI/05.15_Local_Agents_I.ipynb>)
+1. [05.16_Local_Model_Context_Protocol.ipynb](<05_Mobile_AI/05.16_Local_Model_Context_Protocol.ipynb>)
+1. [05.17_Local_Agents_II.ipynb](<05_Mobile_AI/05.17_Local_Agents_II.ipynb>)
+1. [05.18_Build_Your_Own_Model.ipynb](<05_Mobile_AI/05.18_Build_Your_Own_Model.ipynb>)
+1. [05.19_GRAND_FINALE_Know_When_You_Dont_Know.ipynb](<05_Mobile_AI/05.19_GRAND_FINALE_Know_When_You_Dont_Know.ipynb>)
 
 #### 06_Cloud_Computing
 
 1. [06.1_Cloud_Computing.ipynb](<06_Cloud_Computing/06.1_Cloud_Computing.ipynb>)
 1. [06.2_Cloud_Providers_and_Availability.ipynb](<06_Cloud_Computing/06.2_Cloud_Providers_and_Availability.ipynb>)
 1. [06.3_Build_Your_Own_Cloud.ipynb](<06_Cloud_Computing/06.3_Build_Your_Own_Cloud.ipynb>)
+
+#### 07_Misc
+
+1. [07.01_Comparing_Processor_Architectures.ipynb](<07_Misc/07.01_Comparing_Processor_Architectures.ipynb>)
 
 <!-- footer:start -->
 <div align="center" style="font-family: Frutiger, 'Frutiger Neue', Arial, Helvetica, sans-serif; font-size: 0.85em; line-height: 1.25;"><br>

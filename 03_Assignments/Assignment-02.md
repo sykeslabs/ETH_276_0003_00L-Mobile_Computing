@@ -27,28 +27,43 @@ This is a homework assignment. Please adhere strictly to the [Submission Guideli
 **Submit:** [Assignment 02 on Moodle](https://moodle-app2.let.ethz.ch/mod/assign/view.php?id=1446576)
 
 
+Submission is not required for notebooks marked OPTIONAL.
+
 #### 02 - Data Communication (for Part I of the course)
 
-- [02.5 Multipath and OFDM](../02_Notebooks/02_Data_Communication/02.5_Multipath_and_OFDM.ipynb)
-- [02.6 Noise and Interference](../02_Notebooks/02_Data_Communication/02.6_Noise_and_Interference.ipynb)
-- [02.7 Path Loss of Radio Communication](../02_Notebooks/02_Data_Communication/02.7_Path_Loss_of_Radio_Communication.ipynb)
-- [02.8 Radio Spectrum](../02_Notebooks/02_Data_Communication/02.8_Radio_Spectrum.ipynb)
-- [02.9 Shannon Capacity](../02_Notebooks/02_Data_Communication/02.9_Shannon_Capacity.ipynb)
+- OPTIONAL [02.5 Multipath Propagation & OFDM](../02_Notebooks/02_Data_Communication/02.5_Multipath_and_OFDM.ipynb)
+- OPTIONAL [02.6 Noise and Interference](../02_Notebooks/02_Data_Communication/02.6_Noise_and_Interference.ipynb)
+- OPTIONAL [02.7 Path Loss of Radio Communication](../02_Notebooks/02_Data_Communication/02.7_Path_Loss_of_Radio_Communication.ipynb)
+- OPTIONAL [02.8 Radio Spectrum](../02_Notebooks/02_Data_Communication/02.8_Radio_Spectrum.ipynb)
+- OPTIONAL [02.9 Shannon Capacity](../02_Notebooks/02_Data_Communication/02.9_Shannon_Capacity.ipynb)
 
-#### 03 - Mobile Systems (for Part II of the course)
+#### 03 - Mobile Systems (for Part I of the course)
 
-- [03.1 5G Mobile Communication](../02_Notebooks/03_Mobile_Systems/03.1_5G_Mobile_Communication.ipynb)
-- [03.2 Cellular Networking](../02_Notebooks/03_Mobile_Systems/03.2_Cellular_Networking.ipynb)
-- [03.3 GNSS](../02_Notebooks/03_Mobile_Systems/03.3_GNSS.ipynb)
-- [03.4 LiFi](../02_Notebooks/03_Mobile_Systems/03.4_LiFi.ipynb)
+- OPTIONAL [03.3 Global Navigation Satellite Systems](../02_Notebooks/03_Mobile_Systems/03.3_Global_Navigation_Satellite_Systems.ipynb)
+- [03.4 Visible Light Communication](../02_Notebooks/03_Mobile_Systems/03.4_Visible_Light_Communication.ipynb)
 - [03.5 Wi-Fi Contention Protocol](../02_Notebooks/03_Mobile_Systems/03.5_Wi-Fi_Contention_Protocol.ipynb)
-- [03.6 Wi-Fi Network Performance](../02_Notebooks/03_Mobile_Systems/03.6_Wi-Fi_Network_Performance.ipynb)
-- [03.7 Wi-Fi Simulation with Jemula802](../02_Notebooks/03_Mobile_Systems/03.7_Wi-Fi_Simulation_with_Jemula802.ipynb)
-- [03.8 Wi-Fi Single-Link Throughput](../02_Notebooks/03_Mobile_Systems/03.8_Wi-Fi_Single_Link_Throughput.ipynb)
+- OPTIONAL [03.6 Wi-Fi Network Performance](../02_Notebooks/03_Mobile_Systems/03.6_Wi-Fi_Network_Performance.ipynb)
+- OPTIONAL [03.7 Wi-Fi Simulation with Jemula802](../02_Notebooks/03_Mobile_Systems/03.7_Wi-Fi_Simulation_with_Jemula802.ipynb)
+- OPTIONAL [03.8 Wi-Fi Single-Link Throughput](../02_Notebooks/03_Mobile_Systems/03.8_Wi-Fi_Single_Link_Throughput.ipynb)
 
 #### 04 - Mobile Algorithms (for Part II of the course)
 
-- [04.4 Rocket Landing with PID](../02_Notebooks/04_Mobile_Algorithms/04.4_Rocket_Landing_With_PID.ipynb)
+- [04.1 Control and Coordination in Mobile Systems](../02_Notebooks/04_Mobile_Algorithms/04.1_Control_and_Coordination_in_Mobile_Systems.ipynb)
+- [04.2 PID Controller](../02_Notebooks/04_Mobile_Algorithms/04.2_PID_Controller.ipynb)
+- OPTIONAL [04.3 PID for Rocket Landing](../02_Notebooks/04_Mobile_Algorithms/04.3_PID_For_Rocket_Landing.ipynb)
+- [04.4 Tit-for-Tat Spectrum Management](../02_Notebooks/04_Mobile_Algorithms/04.4_Tit-for-Tat_Spectrum_Management.ipynb)
+
+#### 05 - Mobile AI (for Part II of the course)
+
+- OPTIONAL [05.01 Understanding Tokenization](../02_Notebooks/05_Mobile_AI/05.01_Understanding_Tokenization.ipynb)
+- OPTIONAL [05.02 Understanding Word Embedding](../02_Notebooks/05_Mobile_AI/05.02_Understanding_Word_Embedding.ipynb)
+- OPTIONAL [05.03 Understanding Attention](../02_Notebooks/05_Mobile_AI/05.03_Understanding_Attention.ipynb)
+- [05.04 Getting Started with Raspberry Pi](../02_Notebooks/05_Mobile_AI/05.04_GettingStarted_with_Raspberry_Pi.ipynb)
+- [05.05 Introduction to LLMs](../02_Notebooks/05_Mobile_AI/05.05_Introduction_to_LLMs.ipynb)
+- [05.06 Understanding Training](../02_Notebooks/05_Mobile_AI/05.06_Understanding_Training.ipynb)
+- [05.07 Introduction to Local LLMs](../02_Notebooks/05_Mobile_AI/05.07_Introduction_to_Local_LLMs.ipynb)
+- [05.08 Hardware for Local LLMs](../02_Notebooks/05_Mobile_AI/05.08_Hardware_for_Local_LLMs.ipynb)
+- [05.09 Making Models Smaller](../02_Notebooks/05_Mobile_AI/05.09_Making_Models_Smaller.ipynb)
 
 ----
 <!-- footer:start -->

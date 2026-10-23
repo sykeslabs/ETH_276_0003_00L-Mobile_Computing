@@ -1,0 +1,100 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GPU: parallel outputs in matrix C</title><style>
+:root { color-scheme:light; --background:#fff; --foreground:#172b3a;
+ --muted:#e9eef2; --muted-foreground:#526572; --viz-series-1:#087f8c; }
+* { box-sizing:border-box; }
+body { margin:0; padding:12px; font:15px/1.5 system-ui,-apple-system,sans-serif;
+ background:var(--background); color:var(--foreground); }
+button { font:inherit; padding:7px 12px; border:1px solid #b3c1cb;
+ border-radius:6px; background:#fff; color:var(--foreground); }
+button { cursor:pointer; } button:hover { background:#e9f4f5; }
+.btn-primary { background:#087f8c; color:#fff; border-color:#087f8c; }
+.btn-primary:hover { background:#06646e; }
+button:focus-visible,a:focus-visible { outline:3px solid #2463a6; outline-offset:3px; }
+h1 { font-weight:400; font-size:15px; margin:0 0 8px; } h2 { font-weight:400; font-size:15px; }
+a { color:#2463a6; } .note { color:#526572; max-width:1000px; }
+</style></head><body><h1>GPU: parallel outputs in matrix C</h1><p class="note">Sixteen partial sums advance together in each tile. Playback continues across all tiles until matrix C is filled. This illustrates parallel tiled multiplication, not the exact execution units or timing of VideoCore VII. A and B are the input matrices; C is their matrix product. The × symbol means multiplication. Each small square represents one matrix entry. A tile is a 4 × 4 block of output entries. The inner index counts the 16 multiplication steps used to build each output. Highlighted input squares show the values currently used; green output squares show completed values.</p><div id="gpu-matrix16">
+<style>
+    #gpu-matrix16 { color:var(--foreground); }
+    #gpu-matrix16 .gm-controls { display:flex; flex-wrap:wrap; align-items:end; gap:12px; margin-bottom:12px; }
+    #gpu-matrix16 .gm-panels { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+    #gpu-matrix16 .gm-title { text-align:center; font-weight:400; margin-bottom:8px; }
+    #gpu-matrix16 .gm-grid { display:grid; grid-template-columns:repeat(16,minmax(0,1fr)); gap:1px; max-width:200px; margin:auto; }
+    #gpu-matrix16 .gm-cell { min-width:0; aspect-ratio:1; background:var(--muted); border-radius:2px; }
+    #gpu-matrix16 .gm-cell.band { background:color-mix(in srgb,var(--viz-series-1) 22%,var(--muted)); }
+    #gpu-matrix16 .gm-cell.active { background:var(--viz-series-1); }
+    #gpu-matrix16 #gm-c { max-width:200px; }
+    #gpu-matrix16 #gm-c .gm-cell { display:grid; place-items:center; font-size:6.5px; line-height:1; font-variant-numeric:tabular-nums; }
+    #gpu-matrix16 #gm-c .active { color:white; }
+    #gpu-matrix16 .gm-cell.done { background:#c5e7df; color:#172b3a; }
+    #gpu-matrix16 .gm-caption { text-align:center; color:var(--muted-foreground); margin-top:6px; font-size:13px; }
+    #gpu-matrix16 .gm-status { text-align:center; margin-top:12px; min-height:2em; }
+    @media(max-width:650px) { #gpu-matrix16 .gm-panels { grid-template-columns:1fr; gap:22px; } #gpu-matrix16 .gm-grid { max-width:200px; } }
+  </style>
+<div class="gm-controls">
+<button class="btn btn-primary" id="gm-play" type="button">Play</button>
+<button class="btn" id="gm-reset" type="button">Reset</button>
+</div>
+<div aria-label="GPU tile multiplication of two sixteen by sixteen matrices" class="gm-panels" role="group">
+<section><div class="gm-title">A (16 rows, 16 columns)</div><div class="gm-grid" id="gm-a"></div><div class="gm-caption">Four rows feed the tile</div></section>
+<section><div class="gm-title">B (16 rows, 16 columns)</div><div class="gm-grid" id="gm-b"></div><div class="gm-caption">Four columns feed the tile</div></section>
+<section><div class="gm-title">C = A × B (16 rows, 16 columns)</div><div class="gm-grid" id="gm-c"></div><div class="gm-caption">A 4 × 4 output tile</div></section>
+</div>
+<div aria-live="polite" class="gm-status" id="gm-status"></div>
+<script>
+    (()=>{
+      const root=document.getElementById('gpu-matrix16');
+      const A=Array.from({length:16},(_,r)=>Array.from({length:16},(_,k)=>(r+k)%4+1));
+      const B=Array.from({length:16},(_,k)=>Array.from({length:16},(_,c)=>(2*k+c)%5+1));
+      const grids={};
+      for(const name of ['a','b','c']){
+        const parent=root.querySelector('#gm-'+name);
+        grids[name]=Array.from({length:256},()=>{const el=document.createElement('span');el.className='gm-cell';el.setAttribute('aria-hidden','true');parent.appendChild(el);return el;});
+      }
+      let row=0,col=0;
+      let step=0,timer=null;
+      const finished=new Set();
+      const tileIndex=()=>4*row+col;
+      const play=root.querySelector('#gm-play');
+      function stop(){if(timer)clearInterval(timer);timer=null;play.textContent='Play';}
+      function render(){
+        const r=4*row,c=4*col;
+        grids.a.forEach((el,i)=>{const rr=Math.floor(i/16),cc=i%16;el.className='gm-cell'+(rr>=r&&rr<r+4?' band':'')+(step>0&&rr>=r&&rr<r+4&&cc===step-1?' active':'');});
+        grids.b.forEach((el,i)=>{const rr=Math.floor(i/16),cc=i%16;el.className='gm-cell'+(cc>=c&&cc<c+4?' band':'')+(step>0&&rr===step-1&&cc>=c&&cc<c+4?' active':'');});
+        grids.c.forEach((el,index)=>{
+          const rr=Math.floor(index/16),cc=index%16;
+          const selected=rr>=r&&rr<r+4&&cc>=c&&cc<c+4;
+          const saved=finished.has(4*Math.floor(rr/4)+Math.floor(cc/4));
+          let value=0;
+          for(let k=0;k<(saved?16:selected?step:0);k++)value+=A[rr][k]*B[k][cc];
+          el.className='gm-cell'+(saved?' done':selected?' active':'');
+          el.textContent=saved||selected?value:'';
+          el.removeAttribute('aria-hidden');
+          el.title=`C[${rr+1}, ${cc+1}]: ${saved||selected?value:'pending'}`;
+          el.setAttribute('aria-label',el.title);
+        });
+        root.querySelector('#gm-status').textContent=finished.size===16?'Matrix complete; 256 output values':`Tile ${tileIndex()+1} of 16; inner index ${step} of 16; ${finished.size} tiles complete`;
+      }
+      function reset(){stop();finished.clear();step=0;render();}
+      function next(){
+        if(finished.size===16)return;
+        if(step===16){
+          const tile=(tileIndex()+1)%16;
+          row=Math.floor(tile/4);col=tile%4;
+          step=0;
+        }
+        step++;
+        if(step===16)finished.add(tileIndex());
+        if(finished.size===16)stop();
+        render();
+      }
+      root.querySelector('#gm-reset').addEventListener('click',()=>{row=0;col=0;reset();});
+      play.addEventListener('click',()=>{
+        if(timer){stop();return;}
+        if(finished.size===16)reset();
+        next();
+        if(finished.size<16){timer=setInterval(next,65);play.textContent='Pause';}
+      });
+      render();
+    })();
+  </script>
+</div></body></html>

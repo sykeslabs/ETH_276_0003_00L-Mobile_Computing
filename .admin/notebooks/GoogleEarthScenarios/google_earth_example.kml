@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Example Mobile Computing Scenario</name>
+    
+    <!-- Placemark -->
+    <Placemark>
+      <name>MobComp Placemark</name>
+      <description>Mobile Computing rocks!</description>
+      <Point>
+        <coordinates>8.5417,47.3769,0</coordinates> <!-- Longitude, Latitude, Altitude -->
+      </Point>
+    </Placemark>
+
+    <!-- Path -->
+    <Placemark>
+      <name>MobComp Path</name>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          8.5417,47.3769,0
+          8.55,47.38,0
+          8.56,47.385,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+
+    <!-- Polygon -->
+    <Placemark>
+      <name>MobComp Polygon</name>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              8.5417,47.3769,0
+              8.5425,47.3769,0
+              8.5425,47.3775,0
+              8.5417,47.3775,0
+              8.5417,47.3769,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+  </Document>
+</kml>
